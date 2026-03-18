@@ -46,7 +46,21 @@
       "Bash(node -e \":*)",
       "Bash(node scripts/refresh-claude-md.js --target /tmp/csiq-test --profile default)",
       "Bash(node scripts/install-apply.js --profile minimal --target /tmp/csiq-install-test)",
-      "Bash(node scripts/pick.js --non-interactive --category apex)"
+      "Bash(node scripts/pick.js --non-interactive --category apex)",
+      "Bash(grep -r /deploy . --include=*.md --include=*.json)",
+      "Bash(grep -r \"/apex-review\\\\|/test\\\\|/security-scan\" . --include=*.md)",
+      "Bash(for f:*)",
+      "Bash(do git:*)",
+      "Bash(done)",
+      "Bash(grep -rn '/[a-z]' *.md)",
+      "Bash(grep -v '//')",
+      "Bash(grep -rn '`/[a-z]' *.md)",
+      "Bash(grep -v '`/csiq-')",
+      "Bash(sed -i 's|`/retrieve`|`/csiq-retrieve`|g' csiq-metadata-diff.md)",
+      "Bash(sed -i 's|`/test`|`/csiq-test`|g' csiq-org-health.md)",
+      "Bash(sed -i 's|`/build-fix`|`/csiq-build-fix`|g' csiq-push.md)",
+      "Bash(sed -i 's|`/scaffold-batch`|`/csiq-scaffold-batch`|g' csiq-scaffold-apex.md)",
+      "Bash(grep -rn \"\\\\`/\\\\\\(deploy\\\\|test\\\\|apex-review\\\\|code-review\\\\|security-scan\\\\|push\\\\|validate\\\\|scaffold\\\\|tdd\\\\|plan\\\\|lwc\\\\|governor\\\\|flow\\\\|soql\\\\|debug\\\\|build\\\\|explain\\\\|metadata\\\\|data-model\\\\|org-health\\\\|retrieve\\\\|destructive\\\\|scratch-org\\\\|package\\\\|sf-help\\\\\\)[^a-z]\" README.md Guide.md CLAUDE.md docs/)"
     ]
   }
 }

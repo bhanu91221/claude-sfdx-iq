@@ -25,7 +25,7 @@ The project is organized into core components:
 
 - **agents/** — 14 specialized subagents (apex-reviewer, lwc-reviewer, soql-optimizer, etc.)
 - **skills/** — 36 Salesforce domain skills (apex-patterns, governor-limits, lwc-testing, etc.)
-- **commands/** — 42 slash commands (/deploy, /test, /apex-review, /security-scan, /code-review, /debug-log, etc.)
+- **commands/** — 42 slash commands (/csiq-deploy, /csiq-test, /csiq-apex-review, /csiq-security-scan, /csiq-code-review, /csiq-debug-log, etc.)
 - **hooks/** — Trigger-based automations with 16 hook scripts (post-edit PMD scan, governor limit check, security scan)
 - **rules/** — 44 always-follow guidelines across 6 categories (common + apex + lwc + soql + flows + metadata)
 - **contexts/** — 5 mode-specific context files (develop, review, debug, deploy, admin)
@@ -35,20 +35,20 @@ The project is organized into core components:
 
 ## Key Commands
 
-- `/deploy` — Source deploy with validation and tests
-- `/test` — Run Apex tests with coverage analysis
-- `/apex-review` — Apex code quality review
-- `/security-scan` — CRUD/FLS/sharing/injection scan
-- `/governor-check` — Governor limit risk analysis
-- `/tdd` — Salesforce TDD workflow (Apex + LWC Jest)
-- `/scaffold-trigger` — Generate trigger + handler boilerplate
-- `/scaffold-lwc` — Generate LWC component boilerplate
-- `/code-review` — Full code review with parallel agent orchestration
-- `/debug-log` — Analyze Salesforce debug logs
-- `/build-fix` — Diagnose and fix build/deploy errors
-- `/explain-error` — Explain Salesforce error messages
-- `/validate` — Validate deployment without executing
-- `/destructive` — Manage destructive metadata changes
+- `/csiq-deploy` — Source deploy with validation and tests
+- `/csiq-test` — Run Apex tests with coverage analysis
+- `/csiq-apex-review` — Apex code quality review
+- `/csiq-security-scan` — CRUD/FLS/sharing/injection scan
+- `/csiq-governor-check` — Governor limit risk analysis
+- `/csiq-tdd` — Salesforce TDD workflow (Apex + LWC Jest)
+- `/csiq-scaffold-trigger` — Generate trigger + handler boilerplate
+- `/csiq-scaffold-lwc` — Generate LWC component boilerplate
+- `/csiq-code-review` — Full code review with parallel agent orchestration
+- `/csiq-debug-log` — Analyze Salesforce debug logs
+- `/csiq-build-fix` — Diagnose and fix build/deploy errors
+- `/csiq-explain-error` — Explain Salesforce error messages
+- `/csiq-validate` — Validate deployment without executing
+- `/csiq-destructive` — Manage destructive metadata changes
 
 ## CLI Tools
 

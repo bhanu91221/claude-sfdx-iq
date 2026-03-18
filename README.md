@@ -34,14 +34,14 @@ Then copy the example CLAUDE.md into your SFDX project root:
 cp ~/.claude/plugins/claude-sfdx-iq/examples/CLAUDE.md ./CLAUDE.md
 ```
 
-Open Claude Code in your project — all 42 commands, 14 agents, and 44 rules are immediately available.
+Open Claude Code in your project — all 42 commands and 14 agents are immediately available.
 
 ### Activating the Rules (Required)
 
-Because Claude Code plugins cannot currently automatically distribute the core `rules/` folder (the system prompts), you need to activate them manually in your SFDX project's CLAUDE.md:
+Because Claude Code plugins cannot currently automatically distribute the `rules/` folder, you must activate the 44 rules manually. Add them to your SFDX project's CLAUDE.md:
 
 ```bash
-# After installing the plugin, add the rules to your project CLAUDE.md
+# After installing the plugin, append rule references to your project CLAUDE.md
 cat >> ./CLAUDE.md << 'EOF'
 
 ## Loaded Rules (claude-sfdx-iq)
@@ -57,13 +57,20 @@ cat >> ./CLAUDE.md << 'EOF'
 EOF
 ```
 
-Or copy the pre-built example CLAUDE.md which includes all rule references:
+> **Shortcut:** The pre-built `examples/CLAUDE.md` already includes all rule references — use it instead of appending manually (see the `cp` command above).
+
+### Installation Profiles (Clone Workflow)
+
+If you cloned the repo manually, use `csiq` to install only the components you need:
 
 ```bash
-cp ~/.claude/plugins/claude-sfdx-iq/examples/CLAUDE.md ./CLAUDE.md
-```
+git clone https://github.com/bhanu91221/claude-sfdx-iq.git
+cd claude-sfdx-iq
+npm install
 
-### Installation Profiles
+# Install a profile into your SFDX project
+node scripts/csiq.js install --profile developer --target /path/to/your/sfdx-project
+```
 
 Choose the profile that matches your role:
 
@@ -77,7 +84,6 @@ Choose the profile that matches your role:
 | `full` | 14 | 36 | 42 | 44 | 16 | Everything enabled |
 
 ```bash
-# Install a specific profile
 node scripts/csiq.js install --profile developer
 node scripts/csiq.js install --profile full
 ```
@@ -99,22 +105,22 @@ After installation, open your SFDX project in Claude Code and try:
 
 ```
 # Review your Apex code for quality issues
-/apex-review
+/csiq-apex-review
 
 # Run Apex tests with coverage
-/test
+/csiq-test
 
 # Full security scan
-/security-scan
+/csiq-security-scan
 
 # Start a new feature with TDD
-/tdd Build an AccountService that returns active accounts
+/csiq-tdd Build an AccountService that returns active accounts
 
 # Scaffold a complete trigger with handler and tests
-/scaffold-trigger Opportunity
+/csiq-scaffold-trigger Opportunity
 
 # Deploy to sandbox
-/deploy
+/csiq-deploy
 ```
 
 ---
@@ -161,66 +167,66 @@ The plugin enforces:
 ### Deployment & Retrieval
 | Command | Description |
 |---------|-------------|
-| `/deploy` | Source deploy with validation + automatic test level selection |
-| `/push` | Push source to scratch org |
-| `/validate` | Check-only deployment (no changes applied) |
-| `/retrieve` | Retrieve metadata from org |
-| `/destructive` | Generate destructiveChanges.xml |
-| `/destructive-deploy` | Deploy destructive changes with safety checks |
+| `/csiq-deploy` | Source deploy with validation + automatic test level selection |
+| `/csiq-push` | Push source to scratch org |
+| `/csiq-validate` | Check-only deployment (no changes applied) |
+| `/csiq-retrieve` | Retrieve metadata from org |
+| `/csiq-destructive` | Generate destructiveChanges.xml |
+| `/csiq-destructive-deploy` | Deploy destructive changes with safety checks |
 
 ### Code Review & Quality
 | Command | Description |
 |---------|-------------|
-| `/apex-review` | Apex quality review (bulkification, naming, patterns) |
-| `/lwc-review` | LWC component review (decorators, events, accessibility) |
-| `/soql-review` | SOQL optimization analysis |
-| `/soql-check` | Quick SOQL anti-pattern scan |
-| `/security-scan` | CRUD/FLS/sharing/injection vulnerability scan |
-| `/governor-check` | Governor limit risk analysis |
-| `/flow-review` | Flow best practices check |
-| `/pmd-scan` | PMD static analysis via Salesforce Code Analyzer |
-| `/code-review` | Full review — all agents in parallel |
-| `/org-health` | Org health and technical debt assessment |
+| `/csiq-apex-review` | Apex quality review (bulkification, naming, patterns) |
+| `/csiq-lwc-review` | LWC component review (decorators, events, accessibility) |
+| `/csiq-soql-review` | SOQL optimization analysis |
+| `/csiq-soql-check` | Quick SOQL anti-pattern scan |
+| `/csiq-security-scan` | CRUD/FLS/sharing/injection vulnerability scan |
+| `/csiq-governor-check` | Governor limit risk analysis |
+| `/csiq-flow-review` | Flow best practices check |
+| `/csiq-pmd-scan` | PMD static analysis via Salesforce Code Analyzer |
+| `/csiq-code-review` | Full review — all agents in parallel |
+| `/csiq-org-health` | Org health and technical debt assessment |
 
 ### Testing
 | Command | Description |
 |---------|-------------|
-| `/test` | Run Apex tests with coverage analysis |
-| `/tdd` | TDD workflow — Red-Green-Refactor for Apex and LWC |
-| `/lwc-test` | Run LWC Jest tests |
-| `/test-data` | Generate TestDataFactory class |
-| `/integration-test` | Run integration tests against org |
+| `/csiq-test` | Run Apex tests with coverage analysis |
+| `/csiq-tdd` | TDD workflow — Red-Green-Refactor for Apex and LWC |
+| `/csiq-lwc-test` | Run LWC Jest tests |
+| `/csiq-test-data` | Generate TestDataFactory class |
+| `/csiq-integration-test` | Run integration tests against org |
 
 ### Scaffolding
 | Command | Description |
 |---------|-------------|
-| `/scaffold-trigger` | Generate trigger + handler + test (3 files) |
-| `/scaffold-lwc` | Generate LWC component — JS, HTML, CSS, meta, test (5 files) |
-| `/scaffold-apex` | Generate Apex class + test |
-| `/scaffold-apex-class` | Generate specific pattern — Service, Selector, Domain, etc. |
-| `/scaffold-batch` | Generate Batch + Scheduler + test |
-| `/scaffold-integration` | Generate callout service + mock + test |
-| `/scaffold-flow` | Generate Flow design blueprint |
+| `/csiq-scaffold-trigger` | Generate trigger + handler + test (3 files) |
+| `/csiq-scaffold-lwc` | Generate LWC component — JS, HTML, CSS, meta, test (5 files) |
+| `/csiq-scaffold-apex` | Generate Apex class + test |
+| `/csiq-scaffold-apex-class` | Generate specific pattern — Service, Selector, Domain, etc. |
+| `/csiq-scaffold-batch` | Generate Batch + Scheduler + test |
+| `/csiq-scaffold-integration` | Generate callout service + mock + test |
+| `/csiq-scaffold-flow` | Generate Flow design blueprint |
 
 ### Planning & Architecture
 | Command | Description |
 |---------|-------------|
-| `/plan` | Implementation plan for an SFDX feature |
-| `/data-model` | Design or analyze data model |
-| `/metadata-analyze` | Analyze metadata dependencies |
-| `/metadata-diff` | Compare metadata between orgs or branches |
+| `/csiq-plan` | Implementation plan for an SFDX feature |
+| `/csiq-data-model` | Design or analyze data model |
+| `/csiq-metadata-analyze` | Analyze metadata dependencies |
+| `/csiq-metadata-diff` | Compare metadata between orgs or branches |
 
 ### Utilities
 | Command | Description |
 |---------|-------------|
-| `/debug-log` | Retrieve and analyze Salesforce debug logs |
-| `/build-fix` | Diagnose and fix deployment/compilation errors |
-| `/explain-error` | Explain Salesforce error messages with fix guidance |
-| `/sf-help` | Salesforce CLI command reference |
-| `/apex-doc` | Generate ApexDoc documentation |
-| `/create-scratch-org` | Create and configure scratch org |
-| `/package-version` | Create 2GP package version |
-| `/data-seed` | Load test/sample data into org |
+| `/csiq-debug-log` | Retrieve and analyze Salesforce debug logs |
+| `/csiq-build-fix` | Diagnose and fix deployment/compilation errors |
+| `/csiq-explain-error` | Explain Salesforce error messages with fix guidance |
+| `/csiq-sf-help` | Salesforce CLI command reference |
+| `/csiq-apex-doc` | Generate ApexDoc documentation |
+| `/csiq-create-scratch-org` | Create and configure scratch org |
+| `/csiq-package-version` | Create 2GP package version |
+| `/csiq-data-seed` | Load test/sample data into org |
 
 Run `/help` for the complete list of all 42 commands.
 
@@ -232,20 +238,20 @@ Each agent is a Salesforce specialist. Commands route to them automatically — 
 
 | Agent | Specialty | Used By |
 |-------|-----------|---------|
-| `planner` | Implementation plans across Apex/LWC/metadata | `/plan` |
-| `architect` | Solution architecture, scalability, integrations | `/plan`, `/data-model` |
-| `apex-reviewer` | Bulkification, naming, error handling, patterns | `/apex-review`, `/code-review` |
-| `lwc-reviewer` | Wire usage, events, accessibility, performance | `/lwc-review`, `/code-review` |
-| `soql-optimizer` | Selectivity, indexes, N+1 patterns, binding | `/soql-review` |
-| `security-reviewer` | CRUD/FLS, sharing, injection, CSP | `/security-scan`, `/code-review` |
-| `governor-limits-checker` | DML/SOQL in loops, CPU, heap | `/governor-check`, `/code-review` |
-| `flow-analyst` | Flow XML, DML in loops, fault paths | `/flow-review` |
-| `deployment-specialist` | Deploy, packages, destructive changes | `/deploy`, `/package-version` |
-| `test-guide` | TDD for Apex (90%+) and LWC Jest | `/tdd`, `/test` |
-| `integration-specialist` | REST/SOAP callouts, events, CDC | `/scaffold-integration` |
-| `metadata-analyst` | Metadata dependencies, unused components | `/metadata-analyze`, `/org-health` |
-| `data-modeler` | Object relationships, external IDs, data skew | `/data-model` |
-| `admin-advisor` | Permission sets, sharing rules, validation rules | `/org-health` |
+| `planner` | Implementation plans across Apex/LWC/metadata | `/csiq-plan` |
+| `architect` | Solution architecture, scalability, integrations | `/csiq-plan`, `/csiq-data-model` |
+| `apex-reviewer` | Bulkification, naming, error handling, patterns | `/csiq-apex-review`, `/csiq-code-review` |
+| `lwc-reviewer` | Wire usage, events, accessibility, performance | `/csiq-lwc-review`, `/csiq-code-review` |
+| `soql-optimizer` | Selectivity, indexes, N+1 patterns, binding | `/csiq-soql-review` |
+| `security-reviewer` | CRUD/FLS, sharing, injection, CSP | `/csiq-security-scan`, `/csiq-code-review` |
+| `governor-limits-checker` | DML/SOQL in loops, CPU, heap | `/csiq-governor-check`, `/csiq-code-review` |
+| `flow-analyst` | Flow XML, DML in loops, fault paths | `/csiq-flow-review` |
+| `deployment-specialist` | Deploy, packages, destructive changes | `/csiq-deploy`, `/csiq-package-version` |
+| `test-guide` | TDD for Apex (90%+) and LWC Jest | `/csiq-tdd`, `/csiq-test` |
+| `integration-specialist` | REST/SOAP callouts, events, CDC | `/csiq-scaffold-integration` |
+| `metadata-analyst` | Metadata dependencies, unused components | `/csiq-metadata-analyze`, `/csiq-org-health` |
+| `data-modeler` | Object relationships, external IDs, data skew | `/csiq-data-model` |
+| `admin-advisor` | Permission sets, sharing rules, validation rules | `/csiq-org-health` |
 
 ---
 
@@ -254,7 +260,7 @@ Each agent is a Salesforce specialist. Commands route to them automatically — 
 ```
 You
  │
- ├─ /command  ──────────────────────────────────────────────────
+ ├─ /csiq-command  ──────────────────────────────────────────────
  │                                                              │
  ▼                                                             ▼
 Commands (42)          Hooks (16 scripts — fire automatically)
@@ -294,7 +300,7 @@ Salesforce CLI  →  Salesforce Org
 
 ## CLI Tools
 
-The `csiq` CLI manages the plugin installation and health:
+The `csiq` CLI manages plugin installation and health. Available when you clone the repo (see Installation Profiles above):
 
 ```bash
 # Show help

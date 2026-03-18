@@ -48,18 +48,18 @@
       "logging-framework"
     ],
     "commands": [
-      "deploy",
-      "test",
-      "apex-review",
-      "security-scan",
-      "governor-check",
-      "soql-review",
-      "tdd",
-      "scaffold-apex",
-      "scaffold-trigger",
-      "scaffold-batch",
-      "test-data",
-      "explain-error"
+      "csiq-deploy",
+      "csiq-test",
+      "csiq-apex-review",
+      "csiq-security-scan",
+      "csiq-governor-check",
+      "csiq-soql-review",
+      "csiq-tdd",
+      "csiq-scaffold-apex",
+      "csiq-scaffold-trigger",
+      "csiq-scaffold-batch",
+      "csiq-test-data",
+      "csiq-explain-error"
     ],
     "hooks": [
       "apex-post-edit",

@@ -65,7 +65,7 @@ The plugin enforces `with sharing`, CRUD/FLS checks, and SOQL injection preventi
 Instead of writing boilerplate from scratch, get production-ready code in seconds:
 
 ```
-You: /scaffold-trigger Account
+You: /csiq-scaffold-trigger Account
 
 Claude generates:
   - AccountTrigger.trigger (pure delegation, no logic)
@@ -112,7 +112,7 @@ cp examples/CLAUDE.md /path/to/your/sfdx-project/CLAUDE.md
    ```
 
 3. **Try a command:**
-   Open your SFDX project and type `/apex-review` to review your Apex code.
+   Open your SFDX project and type `/csiq-apex-review` to review your Apex code.
 
 ---
 
@@ -122,22 +122,22 @@ cp examples/CLAUDE.md /path/to/your/sfdx-project/CLAUDE.md
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/deploy` | Deploy source with validation + automatic test level | Ready to push changes to an org |
-| `/push` | Push source to scratch org | Daily scratch org development |
-| `/validate` | Check-only deployment (no changes) | Pre-deploy sanity check |
-| `/retrieve` | Retrieve metadata from org | Pull changes made in the org UI |
-| `/destructive` | Generate destructiveChanges.xml | Removing metadata from target org |
-| `/destructive-deploy` | Deploy destructive changes safely | Executing metadata removal |
+| `/csiq-deploy` | Deploy source with validation + automatic test level | Ready to push changes to an org |
+| `/csiq-push` | Push source to scratch org | Daily scratch org development |
+| `/csiq-validate` | Check-only deployment (no changes) | Pre-deploy sanity check |
+| `/csiq-retrieve` | Retrieve metadata from org | Pull changes made in the org UI |
+| `/csiq-destructive` | Generate destructiveChanges.xml | Removing metadata from target org |
+| `/csiq-destructive-deploy` | Deploy destructive changes safely | Executing metadata removal |
 
 **Example workflow:**
 ```
-You: /validate
+You: /csiq-validate
 Claude: Running check-only deployment against my-sandbox...
         ✅ 47 components validated successfully
         Test level: RunLocalTests (23 tests, 94% coverage)
         Ready to deploy.
 
-You: /deploy
+You: /csiq-deploy
 Claude: Deploying to my-sandbox with RunLocalTests...
         ✅ Deploy succeeded. 47 components. 23 tests passed. 94.2% coverage.
 ```
@@ -146,20 +146,20 @@ Claude: Deploying to my-sandbox with RunLocalTests...
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/apex-review` | Apex quality review (bulkification, naming, patterns) | After writing Apex code |
-| `/lwc-review` | LWC component review (decorators, events, a11y) | After writing LWC components |
-| `/soql-review` | SOQL optimization analysis | Tuning query performance |
-| `/soql-check` | Quick SOQL anti-pattern scan | Fast check during development |
-| `/security-scan` | CRUD/FLS/sharing/injection scan | Before any deployment |
-| `/governor-check` | Governor limit risk analysis | Complex transaction analysis |
-| `/flow-review` | Flow best practices check | After building flows |
-| `/pmd-scan` | PMD static analysis | CI pipeline integration |
-| `/code-review` | Full review (all domains in parallel) | Comprehensive pre-PR review |
-| `/org-health` | Org health assessment | Quarterly org checkup |
+| `/csiq-apex-review` | Apex quality review (bulkification, naming, patterns) | After writing Apex code |
+| `/csiq-lwc-review` | LWC component review (decorators, events, a11y) | After writing LWC components |
+| `/csiq-soql-review` | SOQL optimization analysis | Tuning query performance |
+| `/csiq-soql-check` | Quick SOQL anti-pattern scan | Fast check during development |
+| `/csiq-security-scan` | CRUD/FLS/sharing/injection scan | Before any deployment |
+| `/csiq-governor-check` | Governor limit risk analysis | Complex transaction analysis |
+| `/csiq-flow-review` | Flow best practices check | After building flows |
+| `/csiq-pmd-scan` | PMD static analysis | CI pipeline integration |
+| `/csiq-code-review` | Full review (all domains in parallel) | Comprehensive pre-PR review |
+| `/csiq-org-health` | Org health assessment | Quarterly org checkup |
 
 **Example — catching a security issue:**
 ```
-You: /security-scan
+You: /csiq-security-scan
 
 Claude: 🔴 CRITICAL: AccountService.cls:42 — Dynamic SOQL without bind variables
         String query = 'SELECT Id FROM Account WHERE Name = \'' + userInput + '\'';
@@ -177,15 +177,15 @@ Claude: 🔴 CRITICAL: AccountService.cls:42 — Dynamic SOQL without bind varia
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/test` | Run Apex tests with coverage analysis | After any code change |
-| `/tdd` | Start TDD workflow (Red-Green-Refactor) | Building new features |
-| `/lwc-test` | Run LWC Jest tests | After LWC changes |
-| `/test-data` | Generate TestDataFactory class | Setting up test infrastructure |
-| `/integration-test` | Run integration tests against org | Pre-deployment validation |
+| `/csiq-test` | Run Apex tests with coverage analysis | After any code change |
+| `/csiq-tdd` | Start TDD workflow (Red-Green-Refactor) | Building new features |
+| `/csiq-lwc-test` | Run LWC Jest tests | After LWC changes |
+| `/csiq-test-data` | Generate TestDataFactory class | Setting up test infrastructure |
+| `/csiq-integration-test` | Run integration tests against org | Pre-deployment validation |
 
 **Example — TDD workflow:**
 ```
-You: /tdd I need a service method that returns active accounts with more than 5 opportunities
+You: /csiq-tdd I need a service method that returns active accounts with more than 5 opportunities
 
 Claude: Starting TDD cycle...
 
@@ -216,17 +216,17 @@ Claude: Starting TDD cycle...
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/scaffold-trigger` | Generate trigger + handler + test | New trigger requirement |
-| `/scaffold-lwc` | Generate LWC component (JS/HTML/CSS/meta/test) | New UI component |
-| `/scaffold-apex` | Generate Apex class + test (any type) | New Apex class |
-| `/scaffold-apex-class` | Generate specific class type (Service/Selector/etc.) | Specific pattern needed |
-| `/scaffold-batch` | Generate Batch + Scheduler + test | Data processing job |
-| `/scaffold-integration` | Generate callout + mock + test | External API integration |
-| `/scaffold-flow` | Generate Flow design document | New automation |
+| `/csiq-scaffold-trigger` | Generate trigger + handler + test | New trigger requirement |
+| `/csiq-scaffold-lwc` | Generate LWC component (JS/HTML/CSS/meta/test) | New UI component |
+| `/csiq-scaffold-apex` | Generate Apex class + test (any type) | New Apex class |
+| `/csiq-scaffold-apex-class` | Generate specific class type (Service/Selector/etc.) | Specific pattern needed |
+| `/csiq-scaffold-batch` | Generate Batch + Scheduler + test | Data processing job |
+| `/csiq-scaffold-integration` | Generate callout + mock + test | External API integration |
+| `/csiq-scaffold-flow` | Generate Flow design document | New automation |
 
 **Example — scaffold a complete integration:**
 ```
-You: /scaffold-integration REST callout to Payment Gateway API at https://api.payments.com/v2
+You: /csiq-scaffold-integration REST callout to Payment Gateway API at https://api.payments.com/v2
 
 Claude generates 4 files:
   1. PaymentGatewayService.cls
@@ -252,25 +252,25 @@ Claude generates 4 files:
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/plan` | Implementation plan for a feature | Starting new feature work |
-| `/data-model` | Design or analyze data model | Object/relationship design |
-| `/metadata-analyze` | Analyze metadata dependencies | Before refactoring |
-| `/metadata-diff` | Compare metadata between orgs | Tracking org drift |
+| `/csiq-plan` | Implementation plan for a feature | Starting new feature work |
+| `/csiq-data-model` | Design or analyze data model | Object/relationship design |
+| `/csiq-metadata-analyze` | Analyze metadata dependencies | Before refactoring |
+| `/csiq-metadata-diff` | Compare metadata between orgs | Tracking org drift |
 
 ### Utility
 
 | Command | What It Does | When to Use |
 |---------|-------------|-------------|
-| `/debug-log` | Retrieve and analyze debug logs | Troubleshooting issues |
-| `/build-fix` | Fix deployment/compilation errors | Broken build |
-| `/explain-error` | Explain Salesforce error messages | Unfamiliar error |
-| `/sf-help` | Salesforce CLI command reference | Need CLI syntax |
-| `/apex-doc` | Generate ApexDoc documentation | Documentation sprint |
-| `/create-scratch-org` | Create and configure scratch org | Starting fresh dev |
-| `/scratch-org` | Scratch org quick setup | Quick org spin-up |
-| `/package` | Manage 2GP packages | Package development |
-| `/package-version` | Create package version | ISV workflow |
-| `/data-seed` | Load test/sample data | Populate org with data |
+| `/csiq-debug-log` | Retrieve and analyze debug logs | Troubleshooting issues |
+| `/csiq-build-fix` | Fix deployment/compilation errors | Broken build |
+| `/csiq-explain-error` | Explain Salesforce error messages | Unfamiliar error |
+| `/csiq-sf-help` | Salesforce CLI command reference | Need CLI syntax |
+| `/csiq-apex-doc` | Generate ApexDoc documentation | Documentation sprint |
+| `/csiq-create-scratch-org` | Create and configure scratch org | Starting fresh dev |
+| `/csiq-scratch-org` | Scratch org quick setup | Quick org spin-up |
+| `/csiq-package` | Manage 2GP packages | Package development |
+| `/csiq-package-version` | Create package version | ISV workflow |
+| `/csiq-data-seed` | Load test/sample data | Populate org with data |
 
 ---
 
@@ -282,37 +282,37 @@ Each agent is a specialist that Claude delegates to automatically. You rarely ca
 
 | Agent | Specialty | Model | Invoked By |
 |-------|-----------|-------|------------|
-| **planner** | Implementation plans spanning Apex/LWC/metadata | opus | `/plan` |
-| **architect** | Solution architecture, data model, integration, scalability | opus | `/plan`, `/data-model` |
-| **data-modeler** | Object model, relationships, external IDs, polymorphic lookups | opus | `/data-model` |
+| **planner** | Implementation plans spanning Apex/LWC/metadata | opus | `/csiq-plan` |
+| **architect** | Solution architecture, data model, integration, scalability | opus | `/csiq-plan`, `/csiq-data-model` |
+| **data-modeler** | Object model, relationships, external IDs, polymorphic lookups | opus | `/csiq-data-model` |
 
 ### Code Review
 
 | Agent | Specialty | Model | Invoked By |
 |-------|-----------|-------|------------|
-| **apex-reviewer** | Bulkification, naming, patterns, method size | sonnet | `/apex-review`, `/code-review` |
-| **lwc-reviewer** | Composition, wire usage, accessibility, CSS | sonnet | `/lwc-review`, `/code-review` |
-| **soql-optimizer** | Selectivity, indexes, N+1, relationship depth | sonnet | `/soql-review`, `/soql-check` |
-| **security-reviewer** | CRUD/FLS, sharing, injection, CSP | sonnet | `/security-scan`, `/code-review` |
-| **governor-limits-checker** | DML/SOQL in loops, CPU, heap | sonnet | `/governor-check`, `/code-review` |
-| **flow-analyst** | Flow XML analysis, DML in loops, fault paths | sonnet | `/flow-review` |
+| **apex-reviewer** | Bulkification, naming, patterns, method size | sonnet | `/csiq-apex-review`, `/csiq-code-review` |
+| **lwc-reviewer** | Composition, wire usage, accessibility, CSS | sonnet | `/csiq-lwc-review`, `/csiq-code-review` |
+| **soql-optimizer** | Selectivity, indexes, N+1, relationship depth | sonnet | `/csiq-soql-review`, `/csiq-soql-check` |
+| **security-reviewer** | CRUD/FLS, sharing, injection, CSP | sonnet | `/csiq-security-scan`, `/csiq-code-review` |
+| **governor-limits-checker** | DML/SOQL in loops, CPU, heap | sonnet | `/csiq-governor-check`, `/csiq-code-review` |
+| **flow-analyst** | Flow XML analysis, DML in loops, fault paths | sonnet | `/csiq-flow-review` |
 
 ### DevOps & Admin
 
 | Agent | Specialty | Model | Invoked By |
 |-------|-----------|-------|------------|
-| **deployment-specialist** | Deploy, package versions, destructive changes | sonnet | `/deploy`, `/validate`, `/package` |
-| **test-guide** | TDD for Apex (90%+ coverage) and LWC Jest | sonnet | `/tdd`, `/test` |
-| **integration-specialist** | REST/SOAP callouts, platform events, CDC | sonnet | `/scaffold-integration` |
-| **metadata-analyst** | Metadata dependencies, unused components | sonnet | `/metadata-analyze`, `/org-health` |
-| **admin-advisor** | Permission sets, sharing rules, validation rules | sonnet | `/org-health`, `/data-model` |
+| **deployment-specialist** | Deploy, package versions, destructive changes | sonnet | `/csiq-deploy`, `/csiq-validate`, `/csiq-package` |
+| **test-guide** | TDD for Apex (90%+ coverage) and LWC Jest | sonnet | `/csiq-tdd`, `/csiq-test` |
+| **integration-specialist** | REST/SOAP callouts, platform events, CDC | sonnet | `/csiq-scaffold-integration` |
+| **metadata-analyst** | Metadata dependencies, unused components | sonnet | `/csiq-metadata-analyze`, `/csiq-org-health` |
+| **admin-advisor** | Permission sets, sharing rules, validation rules | sonnet | `/csiq-org-health`, `/csiq-data-model` |
 
 ### How Agent Delegation Works
 
-When you run `/code-review`, Claude orchestrates multiple agents in parallel:
+When you run `/csiq-code-review`, Claude orchestrates multiple agents in parallel:
 
 ```
-/code-review
+/csiq-code-review
     ├── apex-reviewer       → Checks Apex quality
     ├── lwc-reviewer        → Checks LWC quality
     ├── soql-optimizer      → Checks SOQL efficiency
@@ -476,19 +476,19 @@ Similar domain-specific enforcement covering query patterns, flow best practices
 Before creating a PR, run the full gauntlet:
 
 ```
-You: /security-scan
-You: /governor-check
-You: /code-review
+You: /csiq-security-scan
+You: /csiq-governor-check
+You: /csiq-code-review
 ```
 
-Or just use `/code-review` which orchestrates all reviewers in parallel.
+Or just use `/csiq-code-review` which orchestrates all reviewers in parallel.
 
 ### Tip 2: Use /plan Before Complex Features
 
 For any feature touching more than 2 objects or involving integration:
 
 ```
-You: /plan Create a system that syncs Account and Contact changes
+You: /csiq-plan Create a system that syncs Account and Contact changes
      to an external ERP via REST API, with retry logic and error logging
 
 Claude: Creates a detailed plan covering:
@@ -740,7 +740,7 @@ Result: 9 files generated — trigger, handler, handler test, LWC (js/html/css/m
 
 ### Q: Do I need a Salesforce org connected for the plugin to work?
 
-**A:** No. The plugin works without an org connection for code review, scaffolding, planning, and local analysis. An org connection is only needed for `/deploy`, `/test`, `/retrieve`, `/create-scratch-org`, and other org-interactive commands.
+**A:** No. The plugin works without an org connection for code review, scaffolding, planning, and local analysis. An org connection is only needed for `/csiq-deploy`, `/csiq-test`, `/csiq-retrieve`, `/csiq-create-scratch-org`, and other org-interactive commands.
 
 ### Q: Can I use this with VS Code?
 
@@ -756,13 +756,13 @@ Result: 9 files generated — trigger, handler, handler test, LWC (js/html/css/m
 
 ### Q: Does this work with managed packages?
 
-**A:** Yes. The `packaging-2gp` skill and `/package-version` command are designed for ISV development. Use the `isv` installation profile.
+**A:** Yes. The `packaging-2gp` skill and `/csiq-package-version` command are designed for ISV development. Use the `isv` installation profile.
 
 ### Q: What about Flow development?
 
 **A:** While Claude can't generate Flow XML directly, it can:
-- Review existing flows for best practices (`/flow-review`)
-- Design flow blueprints (`/scaffold-flow`)
+- Review existing flows for best practices (`/csiq-flow-review`)
+- Design flow blueprints (`/csiq-scaffold-flow`)
 - Convert complex flows to Apex (`/flow-to-code` skill)
 - Analyze flow metadata for anti-patterns
 
