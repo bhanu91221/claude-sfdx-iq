@@ -19,7 +19,7 @@ describe('session-start hook', () => {
     const output = execSync(`node "${SCRIPT}"`, {
       encoding: 'utf8', cwd: TEMP_DIR, timeout: 20000
     });
-    assert.ok(output.includes('No sfdx-project.json'));
+    assert.ok(output.includes('Not an SFDX project'));
   });
 
   it('detects sfdx-project.json and prints project info', () => {

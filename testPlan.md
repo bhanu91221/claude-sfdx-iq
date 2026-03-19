@@ -1,7 +1,7 @@
 # Claude SFDX IQ — End-to-End Test Plan
 
 > **Last updated: 2026-03-18**
-> **Plugin Version: 1.0.0**
+> **Plugin Version: 1.2.0**
 > **Prerequisites:** Node.js 18+, Salesforce CLI (`sf`), Claude Code, Git
 
 ## Architecture Overview (for Testing)
@@ -985,7 +985,7 @@ Use this checklist to track test execution:
 ### Phase I-7: Final
 - [ ] `npm run coverage` ≥80% (after npm install)
 - [ ] All findings documented
-- [ ] Git commit with tag v1.0.0
+- [ ] Git commit with tag v1.2.0
 - [ ] Push to GitHub
 
 ---

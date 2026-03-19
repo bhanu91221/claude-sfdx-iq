@@ -27,14 +27,14 @@ git init
 git add -A
 
 # Commit
-git commit -m "Initial release: claude-sfdx-iq v1.0.0
+git commit -m "Initial release: claude-sfdx-iq v1.2.0
 
 14 agents, 36 skills, 42 commands, 44 rules, 16 hooks.
 Complete Salesforce DX plugin for Claude Code.
 Covers Apex, LWC, SOQL, Flows, metadata, CI/CD."
 
 # Tag the release
-git tag v1.0.0
+git tag v1.2.0
 
 # Add remote and push
 git remote add origin https://github.com/bhanu91221/claude-sfdx-iq.git
@@ -52,7 +52,7 @@ Your repo already has the required files:
 ```json
 {
   "name": "claude-sfdx-iq",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Complete Salesforce DX plugin for Claude Code — agents, skills, hooks, commands, and rules for Apex, LWC, SOQL, Flows, and SFDX CI/CD",
   "author": {
     "name": "Bhanu Vakati"
@@ -82,7 +82,7 @@ Your repo already has the required files:
       "name": "claude-sfdx-iq",
       "source": ".",
       "description": "Complete Salesforce DX plugin for Claude Code — 14 agents, 36 skills, 42 commands, 44 rules, 16 hooks for Apex, LWC, SOQL, Flows, and SFDX CI/CD",
-      "version": "1.0.0"
+      "version": "1.2.0"
     }
   ]
 }
@@ -362,7 +362,7 @@ If you later create more Salesforce plugins, you can list them all:
       "name": "claude-sfdx-iq",
       "source": {"source": "github", "repo": "bhanu91221/claude-sfdx-iq"},
       "description": "Complete SFDX plugin",
-      "version": "1.0.0"
+      "version": "1.2.0"
     },
     {
       "name": "claude-sf-admin",

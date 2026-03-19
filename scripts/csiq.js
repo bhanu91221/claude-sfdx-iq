@@ -63,7 +63,7 @@ const PROFILES = ['minimal', 'default', 'apex-only', 'lwc-only', 'admin'];
 function showBanner() {
   console.log(`
   ╔══════════════════════════════════════════╗
-  ║      claude-sfdx-iq  v1.0.0             ║
+  ║      claude-sfdx-iq  v1.2.0             ║
   ║  Salesforce DX plugin for Claude Code    ║
   ╚══════════════════════════════════════════╝
 `);

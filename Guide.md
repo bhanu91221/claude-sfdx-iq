@@ -846,6 +846,7 @@ Think of PMD as a linter and claude-sfdx-iq as a senior developer pair.
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 1.2.0 | 2026-03-18 | Enhanced version with comprehensive test suite and improved documentation |
 | 1.0.0 | 2026-03-17 | Initial release: 14 agents, 36 skills, 42 commands, 44 rules, 16 hooks |
 
 ---
