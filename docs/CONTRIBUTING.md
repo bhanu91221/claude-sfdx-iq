@@ -8,7 +8,7 @@ Thank you for your interest in contributing to claude-sfdx-iq. This guide covers
 2. Clone your fork and create a feature branch:
 
 ```bash
-git clone https://github.com/<your-username>/claude-sfdx-iq.git
+git clone https://github.com/bhanu91221/claude-sfdx-iq.git
 cd claude-sfdx-iq
 git checkout -b feature/your-feature-name
 ```
