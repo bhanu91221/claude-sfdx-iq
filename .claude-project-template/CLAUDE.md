@@ -20,7 +20,7 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development.
 
 ### Available Commands
 
-Run `/help` to see all 42 commands, including:
+Run `/help` to see all 43 commands, including:
 - `/csiq-deploy` — Deploy to Salesforce org with validation
 - `/csiq-test` — Run Apex tests with coverage analysis
 - `/csiq-apex-review` — Review Apex code quality
@@ -32,18 +32,71 @@ Run `/help` to see all 42 commands, including:
 - `/csiq-scaffold-lwc` — Generate LWC component boilerplate
 - `/csiq-code-review` — Full code review with parallel agents
 
-### Rules Loading
+### Context Loading (Skills & Rules) — CRITICAL
 
-**Rules are loaded dynamically** by the context-assigner agent based on your task:
-- Apex tasks → apex rules + common/security
-- LWC tasks → lwc rules + common/security
-- Full review → broader rule set
+Skills and rules are loaded dynamically based on each user task. This section defines how context loading works.
 
-**Available Rules:**
+#### Per-Message Context Analysis
+
+On EVERY user message that involves a Salesforce development task:
+
+1. **Invoke the context-assigner agent** with the user's message
+2. **Parse the recommendation** — the agent returns a `---CONTEXT-RECOMMENDATION---` block listing skills and rules to load
+3. **Load the recommended components** using the Read tool:
+   - Skills: `.claude/skills-available/<skill-name>/SKILL.md`
+   - Rules: `.claude/rules/<rule-path>.md`
+4. **Announce what was loaded** — ALWAYS display this summary to the user:
+
+```
+Context Loaded for: [Task description]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Skills ([count]): [comma-separated names]
+Rules ([count]): [comma-separated names]
+~Tokens: [estimated total]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+5. **Proceed with the task** using the loaded skill/rule knowledge
+
+#### Context Re-evaluation
+
+- If the user's next message **changes domain** (e.g., from Apex to LWC), re-invoke context-assigner and load fresh context
+- If the user **continues in the same domain**, reuse current context (no need to re-invoke)
+- If the user **explicitly asks** to reload context, re-invoke context-assigner
+
+#### Context Delegation to Subagents
+
+When delegating to specialized agents (e.g., apex-reviewer, lwc-reviewer, soql-optimizer):
+
+1. **Include loaded context in the agent prompt** — When invoking a subagent via the Agent tool, include the relevant skill/rule content directly in the prompt so the subagent has access to it. Subagents run in isolated contexts and cannot see what the main agent has loaded.
+2. **Domain-specific delegation** — When launching multiple agents (e.g., /csiq-code-review), each agent should receive ONLY the context relevant to its domain:
+   - apex-reviewer gets: apex skills + apex rules + common rules + soql rules (SOQL is part of Apex)
+   - lwc-reviewer gets: lwc skills + lwc rules + common rules
+   - soql-optimizer gets: soql skills + soql rules + common rules
+   - security-reviewer gets: security skills + all security rules across domains
+   - governor-limits-checker gets: governor-limits skill + apex/governor-limits rule + common rules
+3. **Token efficiency** — Only pass the loaded context that matches the agent's domain. Do not dump all loaded context into every agent.
+
+#### Handling --custom Mode
+
+If the user includes `--custom skills`, `--custom rules`, or `--custom skills rules`:
+
+1. The context-assigner returns CUSTOM_MODE with index table(s)
+2. **Display the index table(s)** to the user
+3. **Ask**: "Select by number (e.g., 1,3,5-7), domain name (e.g., apex), or 'all'"
+4. **Parse the user's selection** and load those items using Read tool:
+   - Skills: `.claude/skills-available/<name>/SKILL.md`
+   - Rules: `.claude/rules/<name>.md`
+5. **Display the context summary** as above
+6. **Proceed with the original task**
+
+#### On-demand: /csiq-context
+
+Use `/csiq-context` to inspect currently loaded context or browse available components.
+
+**Available components:**
 
 @.claude/rules/index.md
-
-**Manual rule selection:** Add `--custom rules` to your message to choose specific rules.
 
 ## Development Workflow
 

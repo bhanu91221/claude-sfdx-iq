@@ -116,6 +116,7 @@
       "csiq-apex-review",
       "csiq-build-fix",
       "csiq-code-review",
+      "csiq-context",
       "csiq-create-scratch-org",
       "csiq-data-model",
       "csiq-data-seed",

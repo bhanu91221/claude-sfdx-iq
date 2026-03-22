@@ -20,7 +20,7 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development.
 
 ### Available Commands
 
-Run `/help` to see all 42 commands, including:
+Run `/help` to see all 43 commands, including:
 - `/csiq-deploy` — Deploy to Salesforce org with validation
 - `/csiq-test` — Run Apex tests with coverage analysis
 - `/csiq-apex-review` — Review Apex code quality

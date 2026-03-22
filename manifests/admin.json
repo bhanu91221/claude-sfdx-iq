@@ -38,6 +38,7 @@
       "deployment-strategies"
     ],
     "commands": [
+      "csiq-context",
       "csiq-deploy",
       "csiq-retrieve",
       "csiq-flow-review",

@@ -34,6 +34,7 @@
       "aura-patterns"
     ],
     "commands": [
+      "csiq-context",
       "csiq-deploy",
       "csiq-lwc-review",
       "csiq-lwc-test",

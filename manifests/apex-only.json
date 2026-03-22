@@ -48,6 +48,7 @@
       "logging-framework"
     ],
     "commands": [
+      "csiq-context",
       "csiq-deploy",
       "csiq-test",
       "csiq-apex-review",

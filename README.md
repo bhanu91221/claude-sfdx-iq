@@ -2,12 +2,12 @@
 
 ![npm test](https://img.shields.io/badge/npm%20test-416%20passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue)
-![42 commands](https://img.shields.io/badge/commands-42-orange)
+![43 commands](https://img.shields.io/badge/commands-43-orange)
 ![14 agents](https://img.shields.io/badge/agents-14-purple)
 ![36 skills](https://img.shields.io/badge/skills-36-teal)
 ![44 rules](https://img.shields.io/badge/rules-44-red)
 
-> Production-ready Claude Code plugin for Salesforce DX development. 14 specialist agents, 36 domain skills, 42 slash commands, 44 always-on rules, and 16 automated hook scripts — all tailored for Apex, LWC, SOQL, Flows, and SFDX DevOps.
+> Production-ready Claude Code plugin for Salesforce DX development. 14 specialist agents, 36 domain skills, 43 slash commands, 44 always-on rules, and 16 automated hook scripts — all tailored for Apex, LWC, SOQL, Flows, and SFDX DevOps.
 
 ---
 
@@ -254,7 +254,7 @@ Claude will show you the rules catalog and let you pick specific rules by number
 | `/csiq-package-version` | Create 2GP package version |
 | `/csiq-data-seed` | Load test/sample data into org |
 
-Run `/help` for the complete list of all 42 commands.
+Run `/help` for the complete list of all 43 commands.
 
 ---
 
@@ -429,7 +429,7 @@ node scripts/ci/validate-manifests.js
 | [Guide.md](Guide.md) | Complete guide — what it is, how to use it, tips and tricks |
 | [docs/INSTALLATION.md](docs/INSTALLATION.md) | Detailed installation and setup |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture and component flow |
-| [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md) | All 42 commands with flags and examples |
+| [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md) | All 43 commands with flags and examples |
 | [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | How to add custom agents, skills, commands, rules |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines |
 | [pluginMarketPlace.md](pluginMarketPlace.md) | How to publish to the Claude marketplace |

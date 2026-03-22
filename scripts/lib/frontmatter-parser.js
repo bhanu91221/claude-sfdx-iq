@@ -21,7 +21,7 @@ function parseFrontmatter(content) {
     return result;
   }
 
-  const frontmatterBlock = content.substring(3, endIndex).trim();
+  const frontmatterBlock = content.substring(3, endIndex).replace(/\r/g, '').trim();
   const body = content.substring(endIndex + 3).trim();
 
   result.content = body;

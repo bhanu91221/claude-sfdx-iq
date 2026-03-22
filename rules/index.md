@@ -1,7 +1,7 @@
 # Available Rules
 
 Rules are loaded automatically based on your task by the context-assigner.
-Use `--custom rules` in your message to manually pick rules instead.
+Use `--custom rules` in your message to manually pick rules, or `/csiq-context --list rules` to browse.
 
 | # | Rule | Domain | ~Tokens | Description |
 |---|------|--------|---------|-------------|

@@ -37,7 +37,7 @@ The project is organized into core components:
 ### Distributed Globally (via plugin installation)
 - **agents/** — 14 specialized subagents (apex-reviewer, lwc-reviewer, soql-optimizer, context-assigner, etc.)
 - **skills/** — 36 Salesforce domain skills (apex-patterns, governor-limits, lwc-testing, etc.)
-- **commands/** — 42 slash commands (/csiq-deploy, /csiq-test, /csiq-apex-review, etc.)
+- **commands/** — 43 slash commands (/csiq-deploy, /csiq-test, /csiq-apex-review, etc.)
 - **hooks/** — 6 hook JSON definitions + 16 hook scripts (post-edit scans, quality gates)
 - **contexts/** — 5 mode-specific context files (develop, review, debug, deploy, admin)
 - **scripts/** — Cross-platform Node.js utilities (csiq CLI, setup-project, hook scripts, lib)
@@ -73,6 +73,7 @@ The project is organized into core components:
 - `/csiq-explain-error` — Explain Salesforce error messages
 - `/csiq-validate` — Validate deployment without executing
 - `/csiq-destructive` — Manage destructive metadata changes
+- `/csiq-context` — Show loaded context, browse available skills/rules
 
 ## CLI Tools
 

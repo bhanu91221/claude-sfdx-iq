@@ -1,7 +1,7 @@
 # Available Skills
 
 Skills are loaded automatically based on your task by the context-assigner.
-Use `--custom skills` in your message to manually pick skills instead.
+Use `--custom skills` in your message to manually pick skills, or `/csiq-context --list skills` to browse.
 
 | # | Skill | Domain | ~Tokens | Description |
 |---|-------|--------|---------|-------------|

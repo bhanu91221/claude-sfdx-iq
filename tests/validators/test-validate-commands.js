@@ -8,10 +8,10 @@ const path = require('path');
 const COMMANDS_DIR = path.resolve(__dirname, '..', '..', 'commands');
 
 function parseFrontmatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) {return null;}
   const fields = {};
-  for (const line of match[1].split('\n')) {
+  for (const line of match[1].replace(/\r/g, '').split('\n')) {
     const colonIdx = line.indexOf(':');
     if (colonIdx > 0) {
       const key = line.slice(0, colonIdx).trim();
