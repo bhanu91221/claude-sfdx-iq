@@ -90,7 +90,7 @@ if (fs.existsSync(targetSettingsPath)) {
 
 // Step 5: Copy CLAUDE.md
 const sourceClaudeMdPath = path.join(pluginDir, '.claude-project-template', 'CLAUDE.md');
-const targetClaudeMdPath = path.join(absoluteTargetDir, 'CLAUDE.md');
+const targetClaudeMdPath = path.join(claudeDir, 'CLAUDE.md');
 
 if (fs.existsSync(targetClaudeMdPath)) {
   console.log('\n⚠️  CLAUDE.md already exists in project root — skipping (to preserve your docs)');
