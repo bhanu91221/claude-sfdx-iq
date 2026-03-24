@@ -264,6 +264,8 @@ For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.m
 | [Command Reference](docs/COMMAND-REFERENCE.md) | All 53 commands with flags and examples |
 | [Customization](docs/CUSTOMIZATION.md) | How to add custom agents, skills, commands, and rules |
 | [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines |
+| [Privacy Policy](PRIVACY.md) | What data the plugin accesses and what it does not |
+| [Security Policy](SECURITY.md) | How to report vulnerabilities |
 
 ---
 
