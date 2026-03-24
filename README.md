@@ -270,3 +270,7 @@ For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.m
 ## License
 
 MIT -- see [LICENSE](LICENSE) for details.
+
+---
+
+*This plugin is not officially affiliated with or endorsed by Salesforce, Inc. "Salesforce," "Apex," "Lightning," "Visualforce," and related marks are trademarks of Salesforce, Inc.*
