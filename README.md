@@ -7,411 +7,251 @@
 ![36 skills](https://img.shields.io/badge/skills-36-teal)
 ![44 rules](https://img.shields.io/badge/rules-44-red)
 
-> Production-ready Claude Code plugin for Salesforce DX development. 14 specialist agents, 36 domain skills, 53 slash commands, 44 always-on rules, and 16 automated hook scripts — all tailored for Apex, LWC, SOQL, Flows, and SFDX DevOps.
+This plugin gives Claude Code deep Salesforce expertise. When you install it, Claude understands Salesforce best practices -- security, governor limits, permission models, flows, deployments -- and applies them automatically to everything it builds or reviews for you.
+
+Ask Claude to review your Apex code, design a data model, check your flows, scaffold a trigger, or deploy to a sandbox -- and it will follow Salesforce platform rules without you having to remind it.
+
+---
+
+## Who Is This For?
+
+| If you are... | This plugin helps you... |
+|---|---|
+| **A Salesforce Admin** | Review flows, design permission sets, analyze data models, check org health, deploy metadata -- all through plain English conversation with Claude |
+| **A Salesforce Developer** | Write bulkified Apex, build secure LWC, run TDD workflows, catch governor limit violations, scaffold components with tests |
+| **A DevOps / Release Manager** | Validate deployments, generate destructive changes, manage packages, run CI/CD checks |
 
 ---
 
 ## Installation
 
-### Quick Start (Recommended)
+You can install this plugin two ways -- pick whichever you are most comfortable with.
 
-```bash
-# Step 1: Install the plugin globally via Claude Code
+### Directly from Your Terminal
+
+Open a terminal or command prompt and run these three commands:
+
+**Step 1 -- Add the marketplace:**
+```
+claude plugin marketplace add bhanu91221/claude-sfdx-iq
+```
+
+**Step 2 -- Install the plugin:**
+```
+claude plugin install claude-sfdx-iq@claude-sfdx-iq
+```
+
+**Step 3 -- Enable it:**
+```
+claude plugin enable claude-sfdx-iq
+```
+
+### Inside Claude Code Cli
+
+If you are already working inside Claude Code (in VS Code, the Desktop app, or the CLI), type these commands directly:
+
+**Step 1 -- Add the marketplace:**
+```
 /plugin marketplace add bhanu91221/claude-sfdx-iq
-/plugin install claude-sfdx-iq@claude-sfdx-iq
+```
 
-# Step 2: Setup your SFDX project (copies rules + config)
-cd /path/to/your/sfdx-project
+**Step 2 -- Install the plugin:**
+```
+/plugin install claude-sfdx-iq --scope user
+```
+> **Scope options:** Use `--scope user` to make the plugin available across all your projects (recommended). Use `--scope project` to share it with your team through the repo. Use `--scope local` for you in current project folder.
+
+**Step 3 -- Enable it:**
+```
+/plugin enable claude-sfdx-iq
+```
+
+### Setting Up Rules for Your Salesforce Project
+
+After installing the plugin, you need to copy rules and configuration files into each Salesforce project you work on. **This is a one-time step per project.**
+
+#### Option 1 -- Run a command in your terminal (recommended)
+
+Open a terminal, navigate to your Salesforce project folder, and run:
+
+```
 npx claude-sfdx-iq setup-project
-# Or if npm is blocked (corporate VPN): use /setup-project slash command in Claude Code
 ```
 
-**What this does:**
-1. **Global plugin** — Installs agents, skills, commands to `~/.claude/plugins/claude-sfdx-iq/`
-2. **Project rules** — Copies 44 rules (~43k tokens) to your project's `.claude/rules/`
-3. **Token optimization** — context-assigner agent loads only 5-8 rules per task (saves ~30k tokens)
+#### Option 2 -- Use a slash command inside Claude Code
 
-### How It Works
+Open Claude Code cli in your Salesforce project and type:
 
 ```
-┌─────────────────────────────────────────────────┐
-│ GLOBAL (installed once via marketplace)         │
-│ Location: ~/.claude/plugins/claude-sfdx-iq/    │
-├─────────────────────────────────────────────────┤
-│ ✅ Agents (14)     — Domain specialists         │
-│ ✅ Skills (36)     — Knowledge modules          │
-│ ✅ Commands (53)   — /* slash commands     │
-│ ✅ Hooks (16)      — Automated checks           │
-└─────────────────────────────────────────────────┘
-                      ↓
-┌─────────────────────────────────────────────────┐
-│ PROJECT (setup per SFDX project)                │
-│ Location: /your-sfdx-project/.claude/          │
-├─────────────────────────────────────────────────┤
-│ ✅ Rules (44)      — Loaded dynamically         │
-│ ✅ settings.json   — Plugin configuration       │
-│ ✅ CLAUDE.md       — Project documentation      │
-└─────────────────────────────────────────────────┘
+/setup-project
 ```
 
-**Key Benefits:**
-- Commands available globally (work in any SFDX project)
-- Rules only load in SFDX projects (no token waste elsewhere)
-- Dynamic rule loading (5-8 rules per task instead of all 44)
+This is a good option if npm is blocked on your network (corporate VPN).
 
-### Manual Setup (Alternative)
+#### Option 3 -- Copy files manually
 
-If you prefer manual control:
+Download the plugin files from [GitHub](https://github.com/bhanu91221/claude-sfdx-iq), then copy the following into the `.claude` folder inside your Salesforce project:
 
-```bash
-# 1. Install plugin
-/plugin marketplace add bhanu91221/claude-sfdx-iq
-/plugin install claude-sfdx-iq@claude-sfdx-iq
-
-# 2. Manually copy files to your SFDX project
-cd /path/to/your/sfdx-project
-mkdir -p .claude
-
-# Copy rules
-cp -r ~/.claude/plugins/claude-sfdx-iq/rules ./.claude/rules
-
-# Copy configuration templates
-cp ~/.claude/plugins/claude-sfdx-iq/.claude-project-template/settings.json ./.claude/settings.json
-cp ~/.claude/plugins/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./CLAUDE.md
+```
+your-salesforce-project/
+  .claude/
+    rules/           <-- copy from plugin's rules/ folder
+    settings.json    <-- copy from plugin's .claude-project-template/ folder
+    CLAUDE.md        <-- copy from plugin's .claude-project-template/ folder
 ```
 
-### Prerequisites
-
-| Tool | Version | Required For |
-|------|---------|-------------|
-| Node.js | 18+ | CLI tools, hooks, setup script |
-| Salesforce CLI (`sf`) | latest | Deploy, test, org commands |
-| Claude Code | latest | All commands and agents |
-| Git | any | Version control hooks |
+For detailed manual copy commands, see the [Installation Guide](docs/INSTALLATION.md).
 
 ---
 
 ## Quick Start
 
-After installation and project setup, open your SFDX project in Claude Code:
+After installation and project setup, open your Salesforce project in Claude Code and try these commands.
 
-```
-# Review your Apex code for quality issues
-/apex-review
+### For Admins
 
-# Run Apex tests with coverage
-/test
+| Command | What it does |
+|---------|-------------|
+| `/flow-review` | Checks your flows for performance issues and missing fault paths |
+| `/org-health` | Analyzes your org's permissions, sharing rules, and metadata for technical debt |
+| `/data-model` | Helps design or analyze object relationships and field architecture |
+| `/deploy` | Deploys metadata to your org with validation |
+| `/explain-error` | Explains Salesforce error messages in plain language with fix steps |
+| `/status` | Shows plugin status and org connection |
 
-# Full security scan (CRUD/FLS, sharing, injection)
-/security-scan
+Try typing `/org-health` in Claude Code. The plugin will analyze your org's permission model, sharing rules, and metadata structure, then give you a report with specific recommendations.
 
-# Start a new feature with TDD
-/tdd Build an AccountService that returns active accounts
+### For Developers
 
-# Scaffold a complete trigger with handler and tests
-/scaffold-trigger Opportunity
+| Command | What it does |
+|---------|-------------|
+| `/apex-review` | Reviews Apex code for quality, bulkification, and security |
+| `/tdd` | Starts a test-driven development workflow (Red-Green-Refactor) |
+| `/scaffold-trigger` | Generates a complete trigger + handler + test (3 files) |
+| `/security-scan` | Scans for CRUD/FLS, sharing, and injection vulnerabilities |
+| `/test` | Runs Apex tests with coverage analysis |
+| `/code-review` | Full review with all specialist agents running in parallel |
 
-# Deploy to sandbox with validation
-/deploy
-```
+Run `/help` for the complete list of all 53 commands.
 
-**Note:** If you see a message "Not an SFDX project", make sure:
-1. You're in a directory with `sfdx-project.json`
-2. You've run `npx claude-sfdx-iq setup-project` to copy rules to `.claude/rules/`
+> **Note:** If you see "Not an SFDX project", make sure you are in a directory with `sfdx-project.json` and you have run the setup-project step above.
 
 ---
 
 ## What It Does
 
-Claude SFDX IQ transforms Claude into a team of 14 Salesforce specialists that work alongside you:
+The plugin adds three layers of Salesforce intelligence to Claude:
 
-### Before the plugin
-```apex
-// Claude writes this — looks fine, breaks at 200+ records
-for (Account acc : accounts) {
-    List<Contact> contacts = [SELECT Id FROM Contact WHERE AccountId = :acc.Id];
-    update acc;
-}
-```
+**Agents (14 specialists)** -- Think of these as 14 Salesforce consultants that Claude can call on. When you ask for a flow review, the flow analyst handles it. When you ask for a security scan, the security reviewer takes over. You never call agents directly -- they activate automatically based on what you ask.
 
-### With the plugin
-```apex
-// Claude writes bulkified, secure code automatically
-Map<Id, List<Contact>> contactsByAccount = new Map<Id, List<Contact>>();
-for (Contact c : [
-    SELECT Id, AccountId FROM Contact
-    WHERE AccountId IN :accounts
-    WITH SECURITY_ENFORCED
-]) {
-    if (!contactsByAccount.containsKey(c.AccountId)) {
-        contactsByAccount.put(c.AccountId, new List<Contact>());
-    }
-    contactsByAccount.get(c.AccountId).add(c);
-}
-```
+**Skills (36 knowledge areas)** -- Skills are reference guides the agents use, covering topics like governor limits, permission models, LWC testing patterns, and SOQL optimization. The plugin loads only the skills relevant to your current task to keep things fast.
 
-The plugin enforces:
-- **Governor limits first** — No SOQL/DML in loops, ever
-- **Security by default** — `with sharing`, CRUD/FLS, bind variables, no injection
-- **Bulkification always** — All code handles 200+ records
-- **Test-driven** — 75% minimum coverage, 90%+ target, bulk tests required
-- **Token optimized** — Loads only 5-8 relevant rules per task (~5-15k tokens vs 43k)
+**Rules (44 guidelines)** -- Rules are the guardrails. They enforce best practices like "always use permission sets over profiles" and "never put database queries inside loops." Rules are checked automatically every time Claude writes or reviews code.
+
+### What the plugin enforces
+
+- **Governor limits first** -- Prevents code patterns that would hit Salesforce platform limits (like too many database queries)
+- **Security by default** -- Ensures proper access checks, data security, and protection against injection attacks
+- **Bulk-safe code** -- All code handles large volumes of records, not just one at a time
+- **Test coverage** -- Targets 90%+ test coverage with meaningful test scenarios
 
 ---
 
-## Token Optimization
+## Commands for Admins
 
-The plugin uses a **context-assigner agent** to minimize token usage:
-
-| Approach | Tokens Loaded | When to Use |
-|----------|---------------|-------------|
-| **All 44 rules** | ~43,000 tokens | ❌ Never (wasteful) |
-| **Auto-selected** | 5,000-15,000 tokens | ✅ Default (smart) |
-| **Custom selection** | Variable | ✅ Add `--custom rules` to your message |
-
-### How It Works
-
-1. You run a command (e.g., `/apex-review`)
-2. context-assigner analyzes your request
-3. Loads only relevant rules:
-   - Apex review → `apex/bulkification`, `apex/security`, `apex/patterns`, `common/security`
-   - LWC review → `lwc/patterns`, `lwc/security`, `common/security`
-   - Full review → Broader set (8-10 rules)
-4. Saves ~30,000 tokens per session
-
-### Manual Rule Selection
-
-```
-Review this Apex class --custom rules
-```
-
-Claude will show you the rules catalog and let you pick specific rules by number or domain.
-
----
-
-## Command Reference
-
-### Deployment & Retrieval
-| Command | Description |
+| Command | What it does |
 |---------|-------------|
-| `/deploy` | Source deploy with validation + automatic test level selection |
-| `/push` | Push source to scratch org |
-| `/validate` | Check-only deployment (no changes applied) |
-| `/retrieve` | Retrieve metadata from org |
-| `/destructive` | Generate destructiveChanges.xml |
-| `/destructive-deploy` | Deploy destructive changes with safety checks |
+| `/flow-review` | Checks your flows for performance issues, missing fault paths, and loops with database operations |
+| `/org-health` | Analyzes your org's permission model, sharing rules, and metadata for technical debt |
+| `/data-model` | Helps design object relationships, external IDs, and field architecture |
+| `/scaffold-flow` | Generates a flow design blueprint following best practices |
+| `/deploy` | Deploys metadata to your org with validation |
+| `/validate` | Tests a deployment without making any changes |
+| `/retrieve` | Pulls metadata from your org into the project |
+| `/metadata-analyze` | Shows metadata dependencies and unused components |
+| `/explain-error` | Explains Salesforce errors in plain language with fix steps |
+| `/doctor` | Checks if your environment is set up correctly |
+| `/status` | Shows plugin status and org connection |
 
-### Code Review & Quality
-| Command | Description |
+---
+
+## Commands for Developers
+
+### Code Review and Quality
+
+| Command | What it does |
 |---------|-------------|
 | `/apex-review` | Apex quality review (bulkification, naming, patterns) |
 | `/lwc-review` | LWC component review (decorators, events, accessibility) |
 | `/soql-review` | SOQL optimization analysis |
-| `/soql-check` | Quick SOQL anti-pattern scan |
-| `/security-scan` | CRUD/FLS/sharing/injection vulnerability scan |
+| `/security-scan` | CRUD/FLS, sharing, and injection vulnerability scan |
 | `/governor-check` | Governor limit risk analysis |
 | `/flow-review` | Flow best practices check |
 | `/pmd-scan` | PMD static analysis via Salesforce Code Analyzer |
-| `/code-review` | Full review — all agents in parallel |
-| `/org-health` | Org health and technical debt assessment |
+| `/code-review` | Full review with all agents running in parallel |
 
-### Testing
-| Command | Description |
-|---------|-------------|
-| `/test` | Run Apex tests with coverage analysis |
-| `/tdd` | TDD workflow — Red-Green-Refactor for Apex and LWC |
-| `/lwc-test` | Run LWC Jest tests |
-| `/test-data` | Generate TestDataFactory class |
-| `/integration-test` | Run integration tests against org |
+### Scaffolding and Testing
 
-### Scaffolding
-| Command | Description |
+| Command | What it does |
 |---------|-------------|
 | `/scaffold-trigger` | Generate trigger + handler + test (3 files) |
-| `/scaffold-lwc` | Generate LWC component — JS, HTML, CSS, meta, test (5 files) |
+| `/scaffold-lwc` | Generate LWC component with JS, HTML, CSS, meta, and test (5 files) |
 | `/scaffold-apex` | Generate Apex class + test |
-| `/scaffold-apex-class` | Generate specific pattern — Service, Selector, Domain, etc. |
 | `/scaffold-batch` | Generate Batch + Scheduler + test |
 | `/scaffold-integration` | Generate callout service + mock + test |
-| `/scaffold-flow` | Generate Flow design blueprint |
+| `/tdd` | TDD workflow -- Red-Green-Refactor for Apex and LWC |
+| `/test` | Run Apex tests with coverage analysis |
+| `/lwc-test` | Run LWC Jest tests |
 
-### Planning & Architecture
-| Command | Description |
+### Deployment and Planning
+
+| Command | What it does |
 |---------|-------------|
+| `/deploy` | Source deploy with validation and automatic test level selection |
+| `/validate` | Check-only deployment (no changes applied) |
+| `/destructive` | Generate destructiveChanges.xml |
 | `/plan` | Implementation plan for an SFDX feature |
 | `/data-model` | Design or analyze data model |
-| `/metadata-analyze` | Analyze metadata dependencies |
-| `/metadata-diff` | Compare metadata between orgs or branches |
-
-### Utilities
-| Command | Description |
-|---------|-------------|
 | `/debug-log` | Retrieve and analyze Salesforce debug logs |
-| `/build-fix` | Diagnose and fix deployment/compilation errors |
-| `/explain-error` | Explain Salesforce error messages with fix guidance |
-| `/sf-help` | Salesforce CLI command reference |
-| `/apex-doc` | Generate ApexDoc documentation |
-| `/create-scratch-org` | Create and configure scratch org |
-| `/package-version` | Create 2GP package version |
-| `/data-seed` | Load test/sample data into org |
+| `/build-fix` | Diagnose and fix deployment or compilation errors |
 
-Run `/help` for the complete list of all 53 commands.
+Run `/help` for the complete list of all 53 commands, or see the [full command reference](docs/COMMAND-REFERENCE.md).
 
 ---
 
 ## The 14 Agents
 
-Each agent is a Salesforce specialist. Commands route to them automatically — you rarely call them directly.
+The plugin includes 14 specialist agents. You do not need to call them directly -- they activate automatically when you use commands.
 
-| Agent | Specialty | Used By |
-|-------|-----------|---------|
-| `planner` | Implementation plans across Apex/LWC/metadata | `/plan` |
-| `architect` | Solution architecture, scalability, integrations | `/plan`, `/data-model` |
-| `apex-reviewer` | Bulkification, naming, error handling, patterns | `/apex-review`, `/code-review` |
-| `lwc-reviewer` | Wire usage, events, accessibility, performance | `/lwc-review`, `/code-review` |
-| `soql-optimizer` | Selectivity, indexes, N+1 patterns, binding | `/soql-review` |
-| `security-reviewer` | CRUD/FLS, sharing, injection, CSP | `/security-scan`, `/code-review` |
-| `governor-limits-checker` | DML/SOQL in loops, CPU, heap | `/governor-check`, `/code-review` |
-| `flow-analyst` | Flow XML, DML in loops, fault paths | `/flow-review` |
-| `deployment-specialist` | Deploy, packages, destructive changes | `/deploy`, `/package-version` |
-| `test-guide` | TDD for Apex (90%+) and LWC Jest | `/tdd`, `/test` |
-| `integration-specialist` | REST/SOAP callouts, events, CDC | `/scaffold-integration` |
-| `metadata-analyst` | Metadata dependencies, unused components | `/metadata-analyze`, `/org-health` |
-| `data-modeler` | Object relationships, external IDs, data skew | `/data-model` |
-| `admin-advisor` | Permission sets, sharing rules, validation rules | `/org-health` |
-
----
-
-## Architecture
-
-```
-You
- │
- ├─ /command  ──────────────────────────────────────────────
- │                                                              │
- ▼                                                             ▼
-Commands (53)          Hooks (16 scripts — fire automatically)
- │                      │
- │  ┌─ post-edit-governor-scan.js  (every .cls save)
- │  ├─ post-edit-security-scan.js  (every .cls save)
- │  ├─ post-edit-pmd-scan.js       (every .cls save)
- │  ├─ post-edit-debug-warn.js     (every .cls save)
- │  ├─ quality-gate.js             (pre-commit)
- │  └─ session-start.js            (session init)
- │
- ▼
-Agents (14 specialists)
- │
- ├── Skills (36 knowledge modules — auto-loaded by context)
- │     apex-patterns, governor-limits, security-patterns,
- │     lwc-testing, soql-optimization, tdd-workflow ...
- │
- └── Rules (44 always-enforced guidelines)
-       common/security, apex/bulkification, lwc/patterns,
-       soql/performance, flows/best-practices ...
- │
- ▼
-Salesforce CLI  →  Salesforce Org
-```
-
-### Core Principles
-
-1. **Governor-Limits-First** — Every code change evaluated against governor limits
-2. **Security-First** — CRUD/FLS enforcement, `with sharing` by default, no SOQL injection
-3. **Test-Driven** — 75% minimum coverage (90%+ target), test-first development
-4. **Bulkification Always** — All code handles 200+ records in trigger context
-5. **Agent-First** — Delegate to specialized agents for domain tasks
-6. **Plan Before Execute** — Plan complex features before writing code
+| Agent | What they help with |
+|-------|-------------|
+| `planner` | Building implementation plans across Apex, LWC, and metadata |
+| `architect` | Solution architecture, scalability, and integration design |
+| `apex-reviewer` | Apex code quality -- bulkification, naming, error handling |
+| `lwc-reviewer` | LWC components -- wire usage, events, accessibility, performance |
+| `soql-optimizer` | SOQL query performance -- selectivity, indexes, binding |
+| `security-reviewer` | Security -- access checks, sharing model, injection prevention |
+| `governor-limits-checker` | Governor limits -- database queries in loops, CPU, heap |
+| `flow-analyst` | Flows -- DML in loops, fault paths, best practices |
+| `deployment-specialist` | Deployments, packages, and destructive changes |
+| `test-guide` | Test-driven development for Apex and LWC Jest |
+| `integration-specialist` | REST/SOAP callouts, platform events, and Change Data Capture |
+| `metadata-analyst` | Metadata dependencies and unused components |
+| `data-modeler` | Object relationships, external IDs, and data skew |
+| `admin-advisor` | Permission sets, sharing rules, and validation rules |
 
 ---
 
-## CLI Tools
+## Troubleshooting
 
-The `claude-sfdx-iq` CLI manages plugin installation and health. Available via `npx` (requires npm) or as slash commands in Claude Code:
+| Problem | Solution |
+|---------|----------|
+| Plugin not loading | Run `npx claude-sfdx-iq doctor` or `/doctor` to diagnose environment issues |
+| "Not an SFDX project" error | Make sure you are in a folder with `sfdx-project.json` and have run the setup-project step |
+| Org not connected | Run `npx claude-sfdx-iq status` `/status` to check your connection, then re-authenticate with `sf org login web` |
+| Something seems broken | Run `npx claude-sfdx-iq repair` `/repair` to auto-fix common configuration problems |
 
-| CLI Command | Slash Command | Description |
-|---|---|---|
-| `npx claude-sfdx-iq setup-project` | `/setup-project` | Copy rules + config to SFDX project |
-| `npx claude-sfdx-iq help` | `/csiq-help` | Show available commands |
-| `npx claude-sfdx-iq status` | `/status` | Plugin status and component counts |
-| `npx claude-sfdx-iq doctor` | `/doctor` | Diagnose environment |
-| `npx claude-sfdx-iq repair` | `/repair` | Check and repair plugin integrity |
-| `npx claude-sfdx-iq list` | `/list` | List installed components |
-| `npx claude-sfdx-iq tokens` | `/tokens` | Show token budget |
-| `npx claude-sfdx-iq install` | `/install` | Install from profile/manifest |
-| `npx claude-sfdx-iq pick` | `/pick` | Interactive component picker |
-| `npx claude-sfdx-iq refresh` | `/refresh` | Regenerate project CLAUDE.md |
-
-> **Corporate VPN / blocked npm?** All CLI tools are also available as slash commands — no npm required.
-
-**Most Important:** After installing the plugin, run `npx claude-sfdx-iq setup-project` (or `/setup-project`) in each SFDX project to copy the rules.
-
----
-
-## Project Structure
-
-```
-claude-sfdx-iq/
-├── agents/          (14)  Specialized Salesforce subagents
-├── commands/        (53)  Slash commands
-├── skills/          (36)  Domain knowledge modules
-├── rules/           (44)  Always-follow guidelines
-│   ├── common/      (9)   Universal rules
-│   ├── apex/        (9)   Apex-specific rules
-│   ├── lwc/         (6)   LWC-specific rules
-│   ├── soql/        (6)   SOQL rules
-│   ├── flows/       (6)   Flow rules
-│   └── metadata/    (8)   Metadata rules
-├── hooks/           (6)   Hook JSON definitions
-├── scripts/
-│   ├── hooks/       (16)  Automated hook scripts
-│   ├── lib/         (10)  Shared library scripts
-│   └── ci/          (7)   CI validation scripts
-├── contexts/        (5)   Mode contexts (develop/review/debug/deploy/admin)
-├── manifests/       (5)   Installation profiles
-├── mcp-configs/     (6)   MCP server configurations
-├── schemas/         (5)   JSON validation schemas
-├── examples/              Template files for SFDX projects
-├── docs/                  Architecture, customization, contributing guides
-└── tests/           (14)  Validator and unit tests
-```
-
----
-
-## Hook Profiles
-
-Control hook aggressiveness via environment variable:
-
-```bash
-# Minimal — critical checks only (fastest)
-export CSIQ_HOOK_PROFILE=minimal
-
-# Standard — balanced checks (default)
-export CSIQ_HOOK_PROFILE=standard
-
-# Strict — all checks including style warnings
-export CSIQ_HOOK_PROFILE=strict
-
-# Disable specific hooks
-export CSIQ_DISABLED_HOOKS="post-edit-pmd-scan,post-edit-debug-warn"
-```
-
----
-
-## Running Tests
-
-```bash
-# Run all validators and unit tests (416 tests)
-npm test
-
-# Run individual validators
-node scripts/ci/validate-agents.js
-node scripts/ci/validate-skills.js
-node scripts/ci/validate-commands.js
-node scripts/ci/validate-hooks.js
-node scripts/ci/validate-rules.js
-node scripts/ci/validate-manifests.js
-```
+For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.md#troubleshooting).
 
 ---
 
@@ -419,27 +259,14 @@ node scripts/ci/validate-manifests.js
 
 | Document | Description |
 |----------|-------------|
-| [Guide.md](Guide.md) | Complete guide — what it is, how to use it, tips and tricks |
-| [docs/INSTALLATION.md](docs/INSTALLATION.md) | Detailed installation and setup |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical architecture and component flow |
-| [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md) | All 53 commands with flags and examples |
-| [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) | How to add custom agents, skills, commands, rules |
-| [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines |
-| [pluginMarketPlace.md](pluginMarketPlace.md) | How to publish to the Claude marketplace |
-| [testPlan.md](testPlan.md) | End-to-end test plan |
-
----
-
-## Contributing
-
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines on adding agents, skills, commands, hooks, and rules.
-
-**File naming:** lowercase with hyphens — e.g., `apex-reviewer.md`, `soql-optimization/`
-
-**Commit format:** `<type>: <description>` — Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`, `ci`
+| [Installation Guide](docs/INSTALLATION.md) | Detailed installation, prerequisites, and environment setup |
+| [Architecture](docs/ARCHITECTURE.md) | Technical architecture and component flow |
+| [Command Reference](docs/COMMAND-REFERENCE.md) | All 53 commands with flags and examples |
+| [Customization](docs/CUSTOMIZATION.md) | How to add custom agents, skills, commands, and rules |
+| [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines |
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT -- see [LICENSE](LICENSE) for details.

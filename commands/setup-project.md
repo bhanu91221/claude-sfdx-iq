@@ -37,7 +37,7 @@ If it already exists, skip and inform the user.
 ### Step 5: Copy CLAUDE.md Template
 If `CLAUDE.md` does NOT exist in the project root:
 - Read `.claude-project-template/CLAUDE.md` from the plugin directory
-- Write it to `CLAUDE.md` in the project root
+- Write it to `.claude/CLAUDE.md` in the project root
 
 If it already exists, skip and inform the user.
 

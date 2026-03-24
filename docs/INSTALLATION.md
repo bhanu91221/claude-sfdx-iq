@@ -8,40 +8,170 @@ Before installing claude-sfdx-iq, ensure you have the following:
 |-------------|----------------|---------------|
 | Node.js | 18+ | `node --version` |
 | Salesforce CLI (sf) | 2.x | `sf --version` |
-| Claude Code CLI | Latest | `claude --version` |
+| Claude Code | Latest | `claude --version` |
+| Git | Any | `git --version` |
 
 You also need an authenticated Salesforce org. Run `sf org list` to confirm at least one org is connected.
 
 ## Installation
 
-### 1. Clone the repository
+You can install this plugin two ways -- pick whichever you are most comfortable with.
+
+### Directly from Your Terminal
+
+Open a terminal or command prompt and run these three commands:
+
+**Step 1 -- Add the marketplace:**
+```
+claude plugin marketplace add bhanu91221/claude-sfdx-iq
+```
+
+**Step 2 -- Install the plugin:**
+```
+claude plugin install claude-sfdx-iq@claude-sfdx-iq
+```
+
+**Step 3 -- Enable it:**
+```
+claude plugin enable claude-sfdx-iq
+```
+
+### Inside Claude Code
+
+If you are already working inside Claude Code (in VS Code, the Desktop app, or the CLI), type these commands directly:
+
+**Step 1 -- Add the marketplace:**
+```
+/plugin marketplace add bhanu91221/claude-sfdx-iq
+```
+
+**Step 2 -- Install the plugin:**
+```
+/plugin install claude-sfdx-iq --scope user
+```
+
+**Step 3 -- Enable it:**
+```
+/plugin enable claude-sfdx-iq
+```
+
+### Installation Scopes
+
+When installing from inside Claude Code, you can choose where the plugin is available:
+
+| Scope | What it means |
+|-------|---------------|
+| **user** | Available in all Claude Code sessions for your user account -- stored in your global config (default) |
+| **local** | Active only in the current project directory -- stored in `.claude/` but not committed to source control |
+| **project** | Shared with your team -- stored in `.claude/settings.json` and committed to the repo so everyone gets the plugin |
+
+## Setting Up Rules for Your SFDX Project
+
+The plugin installs agents, skills, and commands **globally**, but **rules must be copied per SFDX project**. Rules are loaded dynamically -- only 5-8 rules per task instead of all 44, keeping Claude fast and focused.
+
+There are three ways to get rules into your project:
+
+### Option A -- Using npx (recommended)
+
+From your SFDX project root:
+
+```bash
+npx claude-sfdx-iq setup-project
+```
+
+This pulls the latest rules and config templates directly from npm -- no git clone needed.
+
+### Option B -- Using the slash command
+
+If npm is blocked (corporate VPN), open Claude Code in your SFDX project and run:
+
+```
+/setup-project
+```
+
+### Option C -- Manual copy from the GitHub repo
+
+Clone the repo and copy files yourself:
 
 ```bash
 git clone https://github.com/bhanu91221/claude-sfdx-iq.git
-cd claude-sfdx-iq
+cd /path/to/your/sfdx-project
+mkdir -p .claude
+
+# Copy rules
+cp -r /path/to/claude-sfdx-iq/rules ./.claude/rules
+
+# Copy configuration templates
+cp /path/to/claude-sfdx-iq/.claude-project-template/settings.json ./.claude/settings.local.json
+cp /path/to/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./.claude/CLAUDE.md
 ```
 
-### 2. Install dependencies
+**What gets copied to your project:**
 
-```bash
-npm install
+| What | Destination | Purpose |
+|------|-------------|---------|
+| 44 rules | `.claude/rules/` | Domain guidelines, loaded on demand |
+| `settings.local.json` | `.claude/settings.local.json` | Plugin configuration |
+| `CLAUDE.md` | `.claude/CLAUDE.md` | Project-level Claude instructions |
+
+## How It Works
+
+The plugin has two layers -- global components installed once, and per-project rules copied into each Salesforce project:
+
+```
+Global (installed once via marketplace)
+Location: ~/.claude/plugins/claude-sfdx-iq/
+  Agents (14)     -- Domain specialists
+  Skills (36)     -- Knowledge modules
+  Commands (53)   -- Slash commands
+  Hooks (16)      -- Automated quality checks
+                +
+Per Project (run setup-project once per repo)
+Location: /your-sfdx-project/.claude/
+  Rules (44)              -- Loaded dynamically
+  settings.local.json     -- Plugin configuration
+  CLAUDE.md               -- Project documentation
 ```
 
-### 3. Register as a Claude Code plugin
+**Key benefits:**
+- Commands are available globally (work in any SFDX project)
+- Rules only load in SFDX projects (no token waste elsewhere)
+- Dynamic rule loading (5-8 rules per task instead of all 44)
 
-```bash
-claude plugin add /path/to/claude-sfdx-iq
+## Verify the Installation
+
+Open your SFDX project in Claude Code and run:
+
+```
+/csiq-help
 ```
 
-### 4. Verify the installation
+You should see the full list of available commands. Try:
 
-```bash
-claude /deploy --help
-claude /test --help
-claude /apex-review --help
+```
+/status    -- Check plugin and org status
+/doctor    -- Diagnose environment issues
+/list      -- Show installed agents, skills, commands
 ```
 
-If the commands print their descriptions and flags, the plugin is loaded correctly.
+## CLI Tools Reference
+
+All CLI tools are available both from the terminal (via `npx`) and as slash commands inside Claude Code:
+
+| CLI Command | Slash Command | Description |
+|---|---|---|
+| `npx claude-sfdx-iq setup-project` | `/setup-project` | Copy rules + config to SFDX project |
+| `npx claude-sfdx-iq help` | `/csiq-help` | Show available commands |
+| `npx claude-sfdx-iq status` | `/status` | Plugin status and component counts |
+| `npx claude-sfdx-iq doctor` | `/doctor` | Diagnose environment |
+| `npx claude-sfdx-iq repair` | `/repair` | Check and repair plugin integrity |
+| `npx claude-sfdx-iq list` | `/list` | List installed components |
+| `npx claude-sfdx-iq tokens` | `/tokens` | Show token budget |
+| `npx claude-sfdx-iq install` | `/install` | Install from profile/manifest |
+| `npx claude-sfdx-iq pick` | `/pick` | Interactive component picker |
+| `npx claude-sfdx-iq refresh` | `/refresh` | Regenerate project CLAUDE.md |
+
+> **Corporate VPN / blocked npm?** All CLI tools are also available as slash commands -- no npm required.
 
 ## Configuration
 
@@ -135,6 +265,10 @@ sf org login web --alias <your-org-alias>
 ```bash
 npx claude-sfdx-iq doctor
 ```
+
+### "Not an SFDX project" error
+
+Make sure you are in a directory that contains `sfdx-project.json` and that you have run the setup-project step to copy rules into `.claude/rules/`.
 
 ### Validators failing on install
 

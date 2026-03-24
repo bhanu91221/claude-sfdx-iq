@@ -3,7 +3,7 @@ name: admin-advisor
 description: Use this agent for Salesforce admin configuration guidance including permission set design, sharing rules, validation rules, custom metadata for configuration, custom labels, approval processes, email templates, and report type configuration.
 tools: ["Read", "Grep", "Glob"]
 model: sonnet
-tokens: 4003
+tokens: 4169
 domain: admin
 ---
 
@@ -156,11 +156,26 @@ Organization-Wide Defaults (OWD)
 | Pattern | Example | Purpose |
 |---------|---------|---------|
 | **Required conditional field** | `AND(ISPICKVAL(Status, "Closed"), ISBLANK(Closed_Reason__c))` | Require field when status changes |
-| **Format enforcement** | `NOT(REGEX(Phone, "^\\+?[0-9\\-\\s\\(\\)]{7,15}$"))` | Validate phone format |
+| **Track field changes** | `AND(ISCHANGED(Stage__c), PRIORVALUE(Stage__c) = "Prospecting")` | React to specific prior values |
 | **Cross-object validation** | `AND(Amount > 100000, Account.Rating != "Hot")` | Business rules spanning objects |
 | **Date range validation** | `End_Date__c < Start_Date__c` | Ensure logical date ordering |
 | **Profile/Permission bypass** | `AND(rule_condition, NOT($Permission.Bypass_Validation))` | Allow admins to bypass |
 | **Record type-specific** | `AND(RecordType.DeveloperName = "B2B", ISBLANK(Company_Size__c))` | Rules per record type |
+
+> **Note — Phone and Email fields:** Salesforce field types `Phone` and `Email` have built-in format validation — no REGEX needed in validation rules. Use `ISBLANK()` to make them required, not format checks.
+>
+> Use `PRIORVALUE()` when you need to react to what a field *was* before the edit:
+> ```
+> AND(
+>     ISCHANGED(StageName),
+>     OR(
+>         PRIORVALUE(StageName) = "Closed Won",
+>         PRIORVALUE(StageName) = "Closed Lost"
+>     ),
+>     NOT($Permission.Reopen_Closed_Opportunity)
+> )
+> ```
+> This prevents reopening a Closed opportunity unless the user has the `Reopen_Closed_Opportunity` custom permission.
 
 **Validation Rule Design Principles:**
 1. **Error messages should be actionable** — tell the user what to fix, not just what is wrong
