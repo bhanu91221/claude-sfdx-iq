@@ -1,6 +1,6 @@
 # claude-sfdx-iq
 
-![npm test](https://img.shields.io/badge/npm%20test-416%20passing-brightgreen)
+![npm test](https://img.shields.io/badge/npm%20test-800+%20passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue)
 ![53 commands](https://img.shields.io/badge/commands-53-orange)
 ![14 agents](https://img.shields.io/badge/agents-14-purple)
@@ -29,41 +29,19 @@ You can install this plugin two ways -- pick whichever you are most comfortable 
 
 ### Directly from Your Terminal
 
-Open a terminal or command prompt and run these three commands:
+**Run in your terminal:**
+```
+npx claudepluginhub bhanu91221/claude-sfdx-iq
+```
+Or install manually in Claude Code
 
-**Step 1 -- Add the marketplace:**
+**Add the marketplace (one-time)**
 ```
-claude plugin marketplace add bhanu91221/claude-sfdx-iq
+/plugin marketplace add https://www.claudepluginhub.com/api/plugins/bhanu91221-claude-sfdx-iq/marketplace.json
 ```
-
-**Step 2 -- Install the plugin:**
+**Install the plugin**
 ```
-claude plugin install claude-sfdx-iq@claude-sfdx-iq
-```
-
-**Step 3 -- Enable it:**
-```
-claude plugin enable claude-sfdx-iq
-```
-
-### Inside Claude Code Cli
-
-If you are already working inside Claude Code (in VS Code, the Desktop app, or the CLI), type these commands directly:
-
-**Step 1 -- Add the marketplace:**
-```
-/plugin marketplace add bhanu91221/claude-sfdx-iq
-```
-
-**Step 2 -- Install the plugin:**
-```
-/plugin install claude-sfdx-iq --scope user
-```
-> **Scope options:** Use `--scope user` to make the plugin available across all your projects (recommended). Use `--scope project` to share it with your team through the repo. Use `--scope local` for you in current project folder.
-
-**Step 3 -- Enable it:**
-```
-/plugin enable claude-sfdx-iq
+/plugin install bhanu91221-claude-sfdx-iq@cpd-bhanu91221-claude-sfdx-iq
 ```
 
 ### Setting Up Rules for Your Salesforce Project
