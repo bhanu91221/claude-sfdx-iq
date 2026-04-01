@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+---
+
 # SOQL Anti-Patterns
 
 ## SOQL Inside For Loops

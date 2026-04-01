@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/*.html"
+  - "**/lwc/**/*.css"
+---
+
 # LWC Lifecycle Hooks
 
 ## Hook Execution Order

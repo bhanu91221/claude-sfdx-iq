@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.flow"
+  - "**/*.flow-meta.xml"
+  - "**/flows/**"
+---
+
 # Flow Performance
 
 ## No Get Records or DML Inside Loops

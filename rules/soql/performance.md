@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+---
+
 # SOQL Performance
 
 ## Use Selective Filters

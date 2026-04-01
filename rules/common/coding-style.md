@@ -1,3 +1,12 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/*.html"
+---
+
 # Coding Style — Universal Rules
 
 ## Naming Conventions

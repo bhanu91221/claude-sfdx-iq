@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+  - "**/lwc/**/*.js"
+---
+
 # Design Patterns — Universal Rules
 
 ## Separation of Concerns

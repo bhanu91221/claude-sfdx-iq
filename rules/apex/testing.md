@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+---
+
 # Apex Testing Rules
 
 ## Coverage Requirements

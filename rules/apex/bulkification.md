@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+---
+
 # Apex Bulkification
 
 ## Core Principle

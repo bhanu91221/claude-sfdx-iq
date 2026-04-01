@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.flow"
+  - "**/*.flow-meta.xml"
+  - "**/flows/**"
+---
+
 # Flow Security
 
 ## System Context vs User Context (Run Mode)

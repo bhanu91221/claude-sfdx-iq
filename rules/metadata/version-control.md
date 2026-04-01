@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*-meta.xml"
+  - "**/*.object-meta.xml"
+  - ".forceignore"
+  - "sfdx-project.json"
+---
+
 # Metadata Version Control
 
 ## Feature Branch Per User Story

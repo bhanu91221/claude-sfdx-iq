@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*-meta.xml"
+  - "**/*.object-meta.xml"
+  - "**/*.field-meta.xml"
+  - "**/*.permissionset-meta.xml"
+---
+
 # Metadata Coding Style Rules
 
 ## Object Naming

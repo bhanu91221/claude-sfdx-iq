@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/*.html"
+  - "**/lwc/**/*.css"
+---
+
 # LWC Security
 
 ## Content Security Policy (CSP)

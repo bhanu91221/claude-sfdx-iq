@@ -1,3 +1,13 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*Test.cls"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  - "**/lwc/**/__tests__/**"
+---
+
 # Testing Requirements
 
 ## Coverage Requirements

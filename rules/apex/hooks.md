@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+---
+
 # Apex Hook Rules
 
 ## Post-Edit Hooks for Apex Files

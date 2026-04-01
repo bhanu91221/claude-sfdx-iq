@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/*.html"
+  - "**/lwc/**/*.css"
+---
+
 # LWC Performance
 
 ## Prefer @wire Over Imperative Calls
