@@ -31,17 +31,19 @@ You can install this plugin two ways -- pick whichever you are most comfortable 
 
 **Run in your terminal:**
 ```
-npx claudepluginhub bhanu91221/claude-sfdx-iq
+claude plugin marketplace add bhanu91221/claude-sfdx-iq
+
+claude plugin install claude-sfdx-iq
 ```
 Or install manually in Claude Code
 
 **Add the marketplace (one-time)**
 ```
-/plugin marketplace add https://www.claudepluginhub.com/api/plugins/bhanu91221-claude-sfdx-iq/marketplace.json
+/plugin marketplace add bhanu91221/claude-sfdx-iq
 ```
 **Install the plugin**
 ```
-/plugin install bhanu91221-claude-sfdx-iq@cpd-bhanu91221-claude-sfdx-iq
+/plugin install claude-sfdx-iq
 ```
 
 ### Setting Up Rules for Your Salesforce Project
