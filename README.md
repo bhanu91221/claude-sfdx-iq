@@ -30,7 +30,7 @@ You can install this plugin two ways -- pick whichever you are most comfortable 
 ### Directly from Your Terminal
 **Add the marketplace (one-time)**
 ```
-claude plugin marketplace add bhanu91221/claude-sfdx-i
+claude plugin marketplace add bhanu91221/claude-sfdx-iq
 ```
 **Install the plugin**
 ```
