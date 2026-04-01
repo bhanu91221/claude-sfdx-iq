@@ -28,15 +28,16 @@ Ask Claude to review your Apex code, design a data model, check your flows, scaf
 You can install this plugin two ways -- pick whichever you are most comfortable with.
 
 ### Directly from Your Terminal
-
-**Run in your terminal:**
+**Add the marketplace (one-time)**
 ```
-claude plugin marketplace add bhanu91221/claude-sfdx-iq
-
+claude plugin marketplace add bhanu91221/claude-sfdx-i
+```
+**Install the plugin**
+```
 claude plugin install claude-sfdx-iq
 ```
-Or install manually in Claude Code
 
+### Or install in Claude Code
 **Add the marketplace (one-time)**
 ```
 /plugin marketplace add bhanu91221/claude-sfdx-iq
