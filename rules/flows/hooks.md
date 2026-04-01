@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.flow"
+  - "**/*.flow-meta.xml"
+  - "**/flows/**"
+---
+
 # Flow Hook Rules
 
 ## Post-Edit Flow Checks

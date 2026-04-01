@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*-meta.xml"
+  - "**/*.object-meta.xml"
+  - "**/*.field-meta.xml"
+  - "**/*.permissionset-meta.xml"
+---
+
 # Metadata Hook Rules
 
 ## Hook Triggers for Metadata Files

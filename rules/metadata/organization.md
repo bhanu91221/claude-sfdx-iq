@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*-meta.xml"
+  - "**/*.object-meta.xml"
+  - "**/*.field-meta.xml"
+  - "sfdx-project.json"
+---
+
 # Metadata Organization
 
 ## Source Format and sfdx-project.json

@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.flow"
+  - "**/*.flow-meta.xml"
+  - "**/flows/**"
+---
+
 # Flow Coding Style Rules
 
 ## Naming Conventions

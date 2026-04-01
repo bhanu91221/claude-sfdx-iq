@@ -1,3 +1,13 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+  - "**/lwc/**/*.js"
+  - "**/*.flow-meta.xml"
+  - "**/*.permissionset-meta.xml"
+---
+
 # Security Rules for Salesforce Development
 
 ## Sharing Model Enforcement

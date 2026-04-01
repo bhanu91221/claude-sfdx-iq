@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*.cls"
+  - "**/*.trigger"
+  - "**/*.apex"
+  - "**/lwc/**/*.js"
+---
+
 # Governor Limits — Universal Rules
 
 ## Core Principle

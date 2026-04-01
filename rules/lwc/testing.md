@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/__tests__/**"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+---
+
 # LWC Jest Testing
 
 ## File Naming and Location

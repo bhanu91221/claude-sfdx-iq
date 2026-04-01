@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/lwc/**/*.js"
+  - "**/lwc/**/*.html"
+  - "**/lwc/**/*.css"
+---
+
 # LWC Coding Style
 
 ## Component Folder Naming

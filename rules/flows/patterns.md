@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.flow"
+  - "**/*.flow-meta.xml"
+  - "**/flows/**"
+---
+
 # Flow Patterns
 
 ## Record-Triggered: Before-Save vs After-Save Decision Matrix

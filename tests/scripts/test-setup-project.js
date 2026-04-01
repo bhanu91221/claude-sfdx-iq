@@ -138,7 +138,7 @@ describe('setup-project script', () => {
     });
 
     assert.ok(output.includes('Token Optimization'));
-    assert.ok(output.includes('context-assigner'));
+    assert.ok(output.includes('paths:'));
   });
 
   it('prints next steps', () => {

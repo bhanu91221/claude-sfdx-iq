@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*-meta.xml"
+  - "**/*.object-meta.xml"
+  - "sfdx-project.json"
+  - ".forceignore"
+---
+
 # Metadata Deployment
 
 ## Validate Before Deploy
