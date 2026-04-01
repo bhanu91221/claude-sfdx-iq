@@ -13,7 +13,7 @@
  * What it does:
  *   1. Verifies target is an SFDX project (sfdx-project.json exists)
  *   2. Creates .claude/ directory if it doesn't exist
- *   3. Copies all 44 rules to .claude/rules/
+ *   3. Copies all 44 rules to .claude/rules/ (flattened — avoids subdirectory loading bug)
  *   4. Copies settings.json to .claude/
  *   5. Copies CLAUDE.md to project root
  */
@@ -73,8 +73,37 @@ if (fs.existsSync(targetRulesDir)) {
   fs.renameSync(targetRulesDir, backupDir);
 }
 
-fs.cpSync(sourceRulesDir, targetRulesDir, { recursive: true });
-console.log(`✅ Copied 44 rules to .claude/rules/ (~43k tokens total)`);
+// Flatten rules into .claude/rules/ to avoid the Claude Code subdirectory
+// loading bug (paths: frontmatter in subdirectories is silently ignored).
+// Source:  rules/apex/security.md  →  Target: .claude/rules/apex-security.md
+// Source:  rules/README.md         →  Target: .claude/rules/README.md
+fs.mkdirSync(targetRulesDir, { recursive: true });
+
+let ruleCount = 0;
+const entries = fs.readdirSync(sourceRulesDir, { withFileTypes: true });
+for (const entry of entries) {
+  if (entry.isFile() && entry.name.endsWith('.md')) {
+    // Root-level files (README.md, index.md) — copy as-is
+    fs.copyFileSync(
+      path.join(sourceRulesDir, entry.name),
+      path.join(targetRulesDir, entry.name)
+    );
+  } else if (entry.isDirectory()) {
+    // Subdirectory files — flatten with prefix: apex/security.md → apex-security.md
+    const subEntries = fs.readdirSync(path.join(sourceRulesDir, entry.name), { withFileTypes: true });
+    for (const sub of subEntries) {
+      if (sub.isFile() && sub.name.endsWith('.md')) {
+        const flatName = `${entry.name}-${sub.name}`;
+        fs.copyFileSync(
+          path.join(sourceRulesDir, entry.name, sub.name),
+          path.join(targetRulesDir, flatName)
+        );
+        ruleCount++;
+      }
+    }
+  }
+}
+console.log(`✅ Copied ${ruleCount} rules to .claude/rules/ (flat layout — paths: frontmatter enables dynamic loading)`);
 
 // Step 4: Copy settings.json
 const sourceSettingsPath = path.join(pluginDir, '.claude-project-template', 'settings.json');
@@ -104,7 +133,7 @@ if (fs.existsSync(targetClaudeMdPath)) {
 // Step 6: Summary
 console.log('\n✨ Setup complete!\n');
 console.log('📂 Installed files:');
-console.log(`   .claude/rules/          (44 rules)`);
+console.log(`   .claude/rules/          (${ruleCount} rules, flat layout)`);
 if (!fs.existsSync(targetSettingsPath)) {
   console.log(`   .claude/settings.json   (plugin configuration)`);
 }
@@ -113,9 +142,10 @@ if (!fs.existsSync(targetClaudeMdPath)) {
 }
 
 console.log('\n🎯 Token Optimization:');
-console.log('   • 44 rules available (~43k tokens if all loaded)');
-console.log('   • context-assigner agent loads only 5-8 rules per task');
-console.log('   • Typical usage: 5k-15k tokens (saves ~30k tokens per session)');
+console.log('   • Rules use paths: frontmatter — only load when editing matching files');
+console.log('   • Startup loads: ~4 global rules (<2k tokens)');
+console.log('   • Per-file load: only matching domain rules (5k-15k tokens)');
+console.log('   • Saves ~37k tokens vs loading all rules at startup');
 
 console.log('\n🚀 Next steps:');
 console.log('   1. Open your project in Claude Code');
