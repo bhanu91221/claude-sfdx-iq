@@ -73,7 +73,8 @@
       "apex-post-edit",
       "trigger-post-edit",
       "soql-check",
-      "pre-commit"
+      "governor-scan",
+      "security-scan"
     ]
   }
 }

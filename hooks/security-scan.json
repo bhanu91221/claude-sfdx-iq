@@ -2,11 +2,11 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "**/lwc/**/*.js",
+        "matcher": "**/*.cls",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/lwc-lint.js\""
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/post-edit-security-scan.js\""
           }
         ]
       }

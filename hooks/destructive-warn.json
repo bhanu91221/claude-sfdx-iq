@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/pre-commit-check.js"
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/pre-bash-destructive-warn.js\""
           }
         ]
       }

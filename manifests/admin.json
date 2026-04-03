@@ -57,7 +57,7 @@
     ],
     "hooks": [
       "flow-post-edit",
-      "pre-commit"
+      "destructive-warn"
     ]
   }
 }

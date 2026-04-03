@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/apex-lint.js"
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/apex-lint.js\""
           }
         ]
       }

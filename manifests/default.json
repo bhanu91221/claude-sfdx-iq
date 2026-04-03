@@ -173,9 +173,11 @@
       "apex-post-edit",
       "flow-post-edit",
       "lwc-post-edit",
-      "pre-commit",
       "soql-check",
-      "trigger-post-edit"
+      "trigger-post-edit",
+      "governor-scan",
+      "destructive-warn",
+      "security-scan"
     ]
   }
 }

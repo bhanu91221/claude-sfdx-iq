@@ -1,6 +1,6 @@
 {
   "name": "claude-sfdx-iq",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Complete Salesforce DX plugin for Claude Code — agents, skills, hooks, commands, and rules for Apex, LWC, SOQL, Flows, and SFDX CI/CD",
   "author": {
     "name": "Bhanu Vakati"
@@ -9,9 +9,11 @@
       "./hooks/apex-post-edit.json",
       "./hooks/trigger-post-edit.json",
       "./hooks/lwc-post-edit.json",
-      "./hooks/pre-commit.json",
       "./hooks/soql-check.json",
-      "./hooks/flow-post-edit.json"
+      "./hooks/flow-post-edit.json",
+      "./hooks/governor-scan.json",
+      "./hooks/destructive-warn.json",
+      "./hooks/security-scan.json"
     ],                              
   "homepage": "https://github.com/bhanu91221/claude-sfdx-iq",
   "repository": "https://github.com/bhanu91221/claude-sfdx-iq",

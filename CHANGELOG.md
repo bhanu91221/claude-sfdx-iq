@@ -4,6 +4,23 @@ All notable changes to claude-sfdx-iq will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.6] - 2026-04-03
+
+### Fixed
+- Hook command paths now use `${CLAUDE_PLUGIN_ROOT}` so scripts resolve correctly after plugin installation. Previously all 5 PostToolUse hooks used CWD-relative paths (`node scripts/hooks/<script>.js`) that broke when Claude Code was opened from a directory other than the plugin root.
+
+### Removed
+- `hooks/pre-commit.json` — used `PreToolUse` on `Bash` which fired on every bash command, not just git commits. The lint checks it ran (apex-lint, trigger-lint, lwc-lint) are already covered by PostToolUse hooks that fire on each file edit, making this hook redundant with unnecessary overhead on every bash invocation.
+- Removed `pre-commit` from all 5 install manifests (`default`, `apex-only`, `minimal`, `admin`, `lwc-only`)
+
+### Added
+- `hooks/governor-scan.json` — PostToolUse on `**/*.cls`. Catches governor limit risks that apex-lint misses: `Database.query()`/`Database.insert()` dynamic DML variants, `System.enqueueJob()` in loops, HTTP callouts in loops, nested loop detection (stack-based tracker), and unbounded collection warnings.
+- `hooks/destructive-warn.json` — PreToolUse on `Bash`. Intercepts destructive deploy commands, parses the destructiveChanges manifest, and lists exactly what metadata will be permanently deleted before the command executes. Near-zero overhead for non-destructive commands.
+- `hooks/security-scan.json` — PostToolUse on `**/*.cls`. Adds hardcoded credentials/secrets detection, unjustified `without sharing` checks (requires inline justification comment), hardcoded URL detection, and deeper SOQL injection pattern analysis beyond what soql-check provides.
+- `governor-scan` added to `default`, `apex-only`, and `minimal` manifests
+- `destructive-warn` added to `default` and `admin` manifests
+- `security-scan` added to `default` and `apex-only` manifests
+
 ## [1.5.5] - 2026-04-01
 
 ### Fixed

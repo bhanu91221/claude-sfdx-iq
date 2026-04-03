@@ -50,8 +50,7 @@
       "status"
     ],
     "hooks": [
-      "lwc-post-edit",
-      "pre-commit"
+      "lwc-post-edit"
     ]
   }
 }

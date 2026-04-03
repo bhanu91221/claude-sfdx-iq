@@ -48,7 +48,7 @@
     ],
     "hooks": [
       "apex-post-edit",
-      "pre-commit"
+      "governor-scan"
     ]
   }
 }
