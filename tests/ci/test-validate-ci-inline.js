@@ -53,11 +53,10 @@ describe('CI validators (in-process)', () => {
   });
 
   describe('validate-skills.js', () => {
-    it('passes validation', () => {
+    it('exits cleanly — skills system removed', () => {
       const result = requireScript(path.join(CI_DIR, 'validate-skills.js'));
       assert.ok(result.exitCode === null || result.exitCode === 0);
-      assert.ok(result.stdout.includes('Validating skill'));
-      assert.ok(result.stdout.includes('passed'));
+      assert.ok(result.stdout.includes('Skills system removed') || result.stdout.includes('skills'));
     });
   });
 

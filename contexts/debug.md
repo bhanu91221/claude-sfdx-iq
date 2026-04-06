@@ -96,7 +96,7 @@ Is it callout limit? ──yes──> Consolidate callouts
 
 ## Agent Delegation
 
-- Governor limit violations -> delegate to `governor-limits-checker` for refactoring guidance
-- Security errors -> delegate to `security-reviewer` for permission analysis
-- Test failures -> delegate to `test-guide` for test fix assistance
-- Deployment errors -> delegate to `deployment-specialist` for resolution
+- Governor limit violations -> delegate to `apex-code-reviewer` for refactoring guidance
+- Security errors -> delegate to `security-auditor` for permission analysis
+- Test failures -> review inline against test patterns in `/apex-class` or `/trigger` standards
+- Deployment errors -> delegate to `devops-coordinator` for resolution

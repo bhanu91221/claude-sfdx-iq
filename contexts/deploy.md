@@ -89,7 +89,7 @@ sf project deploy start --target-org myOrg --post-destructive-changes destructiv
 
 ## Agent Delegation
 
-- Complex deployments -> delegate to `deployment-specialist` agent
-- Test failures blocking deploy -> delegate to `test-guide` agent
-- Security review before production -> delegate to `security-reviewer` agent
-- Metadata dependency analysis -> delegate to `metadata-analyst` agent
+- Complex deployments -> delegate to `devops-coordinator` agent
+- Test failures blocking deploy -> delegate to `devops-coordinator` agent
+- Security review before production -> delegate to `security-auditor` agent
+- Metadata dependency analysis -> delegate to `devops-coordinator` agent

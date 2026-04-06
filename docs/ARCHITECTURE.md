@@ -6,14 +6,13 @@
 User
   |
   v
-Commands (/deploy, /test, /apex-review, ...)
+Commands (/apex-class --review, /trigger --new, /code-review --apex, ...)
+  |   (each command includes domain standards inline)
   |
-  v
-Agents (deployment-specialist, apex-reviewer, ...)
-  |
-  +------> Skills (deployment-strategies, apex-patterns, ...)
-  |
-  +------> Rules (apex/, lwc/, soql/, flows/, metadata/, common/)
+  +---> Agent (invoked when deeper expertise is needed)
+  |       apex-code-reviewer, lwc-reviewer, security-auditor,
+  |       solution-designer, devops-coordinator, flow-analyst,
+  |       integration-specialist
   |
   v
 SF CLI / External Tools (sf project deploy, sf apex run test, ...)
@@ -22,52 +21,35 @@ SF CLI / External Tools (sf project deploy, sf apex run test, ...)
 Salesforce Org
 ```
 
-## Component Flow: /deploy Example
+Commands are self-contained. Each command includes the domain standards it needs (Apex patterns, governor limits, SOQL rules, etc.) baked inline. There is no dynamic loading step — invoking a command is all that is needed.
 
-When a user runs `/deploy`, the following sequence occurs:
+## Component Flow: /apex-class --review Example
 
-1. **Command layer** (`commands/deploy.md`) parses flags and validates the project structure. It checks for `sfdx-project.json` and determines the target org.
+When a user runs `/apex-class --review AccountService.cls`:
 
-2. **Agent delegation** The deployment-specialist agent (`agents/deployment-specialist.md`) is invoked. It reads the project metadata, determines the test level, and plans the deployment strategy.
+1. **Command layer** (`commands/apex-class.md`) identifies the target file and loads its domain standards from its inline standards section: sharing keywords, bulkification rules, SOQL selectivity, governor limits reference, error handling patterns, and naming conventions.
 
-3. **Skill consultation** The agent references the deployment-strategies skill (`skills/deployment-strategies/SKILL.md`) for best practices such as test level selection, partial deploy recovery, and sandbox vs production handling.
+2. **Review execution** The command applies the inline standards against the file content, producing a structured findings list with severity levels (critical / warning / suggestion).
 
-4. **Rules enforcement** Metadata rules from `rules/metadata/` are evaluated. These enforce naming conventions, API version consistency, and required metadata fields.
+3. **Agent delegation** For deeper analysis, the command delegates to the `apex-code-reviewer` agent (`agents/apex-code-reviewer.md`), which performs a comprehensive review covering N+1 SOQL detection, bulk safe patterns, CPU risk estimation, and security posture.
 
-5. **SF CLI execution** The agent constructs and runs the `sf project deploy start` command with appropriate flags for source path, test level, and wait time.
-
-6. **Result reporting** Deployment results are streamed back. On failure, errors are grouped by file with line numbers. Test failures are delegated to the test-guide agent for analysis.
-
-## Rules Loading
-
-Rules are loaded automatically based on the file type being edited or reviewed:
-
-| File Pattern | Rules Directory |
-|-------------|----------------|
-| `*.cls`, `*.trigger` | `rules/apex/` |
-| `*.js` in `lwc/` | `rules/lwc/` |
-| `*.soql`, SOQL in Apex | `rules/soql/` |
-| `*.flow-meta.xml` | `rules/flows/` |
-| `*-meta.xml` | `rules/metadata/` |
-| All files | `rules/common/` |
-
-Common rules (security, naming, documentation standards) are always loaded. Domain-specific rules are additive.
+4. **Result reporting** The agent returns structured findings grouped by severity. Critical issues (e.g., SOQL in a loop) are flagged first with specific line references and fix guidance.
 
 ## Agent Delegation
 
-Agents can delegate subtasks to other agents. For example, the apex-reviewer agent:
+Commands invoke specialized agents for domain expertise. Each agent has defined tools and a model specified in its frontmatter:
 
-```
-apex-reviewer
-  |
-  +---> governor-limits-checker   (analyzes SOQL/DML counts, CPU risk)
-  |
-  +---> security-reviewer         (checks CRUD/FLS, sharing, injection)
-  |
-  +---> soql-optimizer            (evaluates query selectivity, indexes)
-```
+| Agent | Invoked By | Specialization |
+|-------|-----------|----------------|
+| `apex-code-reviewer` | `/apex-class --review`, `/trigger --review`, `/code-review --apex` | Apex quality, SOQL, governor limits |
+| `lwc-reviewer` | `/lwc --review`, `/code-review --lwc` | LWC component quality |
+| `security-auditor` | `/security-scan`, `/apex-class --review` | CRUD/FLS, injection, sharing |
+| `flow-analyst` | `/flow --review`, `/code-review --flow` | Flow best practices |
+| `solution-designer` | `/plan` | Architecture, phased planning |
+| `devops-coordinator` | `/org-health` | Deployment, org health, CI/CD |
+| `integration-specialist` | `/integration-apex` | REST/SOAP callouts, CDC |
 
-Each agent has a defined set of tools it can use (specified in its frontmatter). Agents operate independently and return structured findings.
+Agents operate independently and return structured findings. The command layer assembles the final output.
 
 ## Hook Pipeline
 
@@ -98,24 +80,14 @@ Example from `hooks/apex-post-edit.json`: when an Apex class is saved, the PMD s
 
 ### Adding a new agent
 
-Create a markdown file in `agents/` with YAML frontmatter specifying `name`, `description`, `tools`, and `model`. The agent becomes available to commands and other agents immediately.
-
-### Adding a new skill
-
-Create a directory in `skills/` with a `SKILL.md` file containing frontmatter (`name`, `description`, `origin`). Skills provide domain knowledge that agents reference during execution.
+Create a markdown file in `agents/` with YAML frontmatter specifying `name`, `description`, `tools`, and `model`. The agent becomes available to commands immediately.
 
 ### Adding a new command
 
-Create a markdown file in `commands/` with `description` frontmatter. The command is registered as a slash command automatically.
+Create a markdown file in `commands/` with `description` frontmatter. Include an inline domain standards section with the rules and patterns the command needs. The command is registered as a slash command automatically.
+
+To add flags to a command, document them in the command body with clear workflow steps for each flag (e.g., `--new`, `--review`, `--refine`, `--bug-fix`).
 
 ### Adding a new hook
 
 Create a JSON file in `hooks/` with `matcher` and `hooks` arrays. The hook fires whenever a matching file event occurs.
-
-### Adding new rules
-
-Add or edit markdown files in the appropriate `rules/` subdirectory. Rules are loaded based on file type and applied during code review and editing.
-
-### Custom manifests
-
-Create a JSON file in `manifests/` listing which agents, skills, commands, hooks, and rules to include. Reference it in your project settings to activate a custom configuration.

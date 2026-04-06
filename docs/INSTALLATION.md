@@ -65,11 +65,11 @@ When installing from inside Claude Code, you can choose where the plugin is avai
 | **local** | Active only in the current project directory -- stored in `.claude/` but not committed to source control |
 | **project** | Shared with your team -- stored in `.claude/settings.json` and committed to the repo so everyone gets the plugin |
 
-## Setting Up Rules for Your SFDX Project
+## Setting Up Your Salesforce Project
 
-The plugin installs agents, skills, and commands **globally**, but **rules must be copied per SFDX project**. Rules are loaded dynamically -- only 5-8 rules per task instead of all 44, keeping Claude fast and focused.
+The plugin installs agents and commands **globally**, but each SFDX project needs a small configuration file to activate it. **This is a one-time step per project.**
 
-There are three ways to get rules into your project:
+There are three ways to set up a project:
 
 ### Option A -- Using npx (recommended)
 
@@ -79,7 +79,7 @@ From your SFDX project root:
 npx claude-sfdx-iq setup-project
 ```
 
-This pulls the latest rules and config templates directly from npm -- no git clone needed.
+This copies the latest configuration templates directly from npm -- no git clone needed.
 
 ### Option B -- Using the slash command
 
@@ -98,9 +98,6 @@ git clone https://github.com/bhanu91221/claude-sfdx-iq.git
 cd /path/to/your/sfdx-project
 mkdir -p .claude
 
-# Copy rules
-cp -r /path/to/claude-sfdx-iq/rules ./.claude/rules
-
 # Copy configuration templates
 cp /path/to/claude-sfdx-iq/.claude-project-template/settings.json ./.claude/settings.local.json
 cp /path/to/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./.claude/CLAUDE.md
@@ -110,33 +107,30 @@ cp /path/to/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./.claude/CLAUDE.m
 
 | What | Destination | Purpose |
 |------|-------------|---------|
-| 44 rules | `.claude/rules/` | Domain guidelines, loaded on demand |
 | `settings.local.json` | `.claude/settings.local.json` | Plugin configuration |
 | `CLAUDE.md` | `.claude/CLAUDE.md` | Project-level Claude instructions |
 
 ## How It Works
 
-The plugin has two layers -- global components installed once, and per-project rules copied into each Salesforce project:
+The plugin installs globally once. Commands are self-contained -- each command includes its own domain standards (Apex patterns, SOQL rules, governor limits, etc.) baked inline. No per-project rules setup is required.
 
 ```
 Global (installed once via marketplace)
 Location: ~/.claude/plugins/claude-sfdx-iq/
-  Agents (14)     -- Domain specialists
-  Skills (36)     -- Knowledge modules
-  Commands (53)   -- Slash commands
-  Hooks (16)      -- Automated quality checks
-                +
+  Agents (7)      -- Domain specialists
+  Commands (19)   -- Slash commands with inline domain standards
+  Hooks (8)       -- Automated quality checks
+             +
 Per Project (run setup-project once per repo)
 Location: /your-sfdx-project/.claude/
-  Rules (44)              -- Loaded dynamically
   settings.local.json     -- Plugin configuration
   CLAUDE.md               -- Project documentation
 ```
 
 **Key benefits:**
 - Commands are available globally (work in any SFDX project)
-- Rules only load in SFDX projects (no token waste elsewhere)
-- Dynamic rule loading (5-8 rules per task instead of all 44)
+- No per-project rules to copy or maintain
+- Commands are self-contained -- invoke them directly, no context loading step
 
 ## Verify the Installation
 
@@ -151,7 +145,6 @@ You should see the full list of available commands. Try:
 ```
 /status    -- Check plugin and org status
 /doctor    -- Diagnose environment issues
-/list      -- Show installed agents, skills, commands
 ```
 
 ## CLI Tools Reference
@@ -160,16 +153,11 @@ All CLI tools are available both from the terminal (via `npx`) and as slash comm
 
 | CLI Command | Slash Command | Description |
 |---|---|---|
-| `npx claude-sfdx-iq setup-project` | `/setup-project` | Copy rules + config to SFDX project |
+| `npx claude-sfdx-iq setup-project` | `/setup-project` | Copy config to SFDX project |
 | `npx claude-sfdx-iq help` | `/csiq-help` | Show available commands |
 | `npx claude-sfdx-iq status` | `/status` | Plugin status and component counts |
 | `npx claude-sfdx-iq doctor` | `/doctor` | Diagnose environment |
 | `npx claude-sfdx-iq repair` | `/repair` | Check and repair plugin integrity |
-| `npx claude-sfdx-iq list` | `/list` | List installed components |
-| `npx claude-sfdx-iq tokens` | `/tokens` | Show token budget |
-| `npx claude-sfdx-iq install` | `/install` | Install from profile/manifest |
-| `npx claude-sfdx-iq pick` | `/pick` | Interactive component picker |
-| `npx claude-sfdx-iq refresh` | `/refresh` | Regenerate project CLAUDE.md |
 
 > **Corporate VPN / blocked npm?** All CLI tools are also available as slash commands -- no npm required.
 
@@ -177,15 +165,15 @@ All CLI tools are available both from the terminal (via `npx`) and as slash comm
 
 ### Selecting a manifest
 
-Manifests control which components (agents, skills, commands, hooks, rules) are active. Choose one that fits your role:
+Manifests control which agents, commands, and hooks are active. Choose one that fits your role:
 
 | Manifest | Description |
 |----------|-------------|
 | `default` | All components enabled (recommended for full-stack SF devs) |
-| `minimal` | Core commands only: deploy, retrieve, test |
-| `apex-only` | Apex agents, skills, and rules; no LWC or Flow components |
-| `lwc-only` | LWC agents, skills, and rules; no Apex or Flow components |
-| `admin` | Flow, metadata, and org-health focused; no code review agents |
+| `minimal` | Core commands only: apex-class, security-scan, code-review |
+| `apex-only` | Apex agents and commands; no LWC or Flow components |
+| `lwc-only` | LWC agent and commands; no Apex or Flow components |
+| `admin` | Flow, org-health, and data-model focused |
 
 To switch manifests, update your project's `.claude/settings.json`:
 
@@ -199,9 +187,21 @@ To switch manifests, update your project's `.claude/settings.json`:
 }
 ```
 
-### Customizing rules
+### Hook profile
 
-Rules in `rules/` are loaded automatically based on file type. To disable a specific rule file, add it to the `disabledRules` array in your settings.
+To control which automated quality checks run on file save, set the `hookProfile` in your settings:
+
+```json
+{
+  "plugins": {
+    "claude-sfdx-iq": {
+      "hookProfile": "standard"
+    }
+  }
+}
+```
+
+Available profiles: `standard` (default), `minimal`, `strict`.
 
 ## Environment Setup
 
@@ -230,18 +230,6 @@ Enable Dev Hub in your production org, then authenticate:
 sf org login web --set-default-dev-hub --alias DevHub
 ```
 
-### Scratch org pool
-
-Create scratch orgs for development:
-
-```bash
-sf org create scratch \
-  --definition-file config/project-scratch-def.json \
-  --alias my-scratch \
-  --set-default \
-  --duration-days 7
-```
-
 ## Troubleshooting
 
 ### `sf: command not found`
@@ -268,7 +256,7 @@ npx claude-sfdx-iq doctor
 
 ### "Not an SFDX project" error
 
-Make sure you are in a directory that contains `sfdx-project.json` and that you have run the setup-project step to copy rules into `.claude/rules/`.
+Make sure you are in a directory that contains `sfdx-project.json` and that you have run the setup-project step.
 
 ### Validators failing on install
 
@@ -278,4 +266,4 @@ Run the full test suite to identify the issue:
 npm test
 ```
 
-This executes all component validators (agents, commands, rules, skills, hooks) and reports any malformed files.
+This executes all component validators (agents, commands, hooks) and reports any malformed files.

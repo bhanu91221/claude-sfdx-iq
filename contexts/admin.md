@@ -90,6 +90,6 @@ Restriction Rules (narrows visibility)
 ## Agent Delegation
 
 - Flow analysis and optimization -> delegate to `flow-analyst` agent
-- Permission model design -> delegate to `admin-advisor` agent
-- Data model changes -> delegate to `data-modeler` agent
-- Complex architecture questions -> delegate to `architect` agent
+- Permission model design -> delegate to `solution-designer` agent
+- Data model changes -> delegate to `solution-designer` agent
+- Complex architecture questions -> delegate to `solution-designer` agent

@@ -19,9 +19,9 @@ npx claude-sfdx-iq setup-project
 ```
 
 This will:
-1. Copy all 44 rules to `.claude/rules/`
-2. Copy settings.json and CLAUDE.md to `.claude/`
-3. Verify you're in an SFDX project (checks for sfdx-project.json)
+1. Verify you're in an SFDX project (checks for sfdx-project.json)
+2. Copy settings.json to `.claude/`
+3. Copy CLAUDE.md to your project root
 
 ### Option 2: Manual Setup
 
@@ -30,9 +30,6 @@ cd /path/to/your/sfdx-project
 
 # Create .claude directory if it doesn't exist
 mkdir -p .claude
-
-# Copy rules from the plugin
-cp -r ~/.claude/plugins/claude-sfdx-iq/rules ./.claude/rules
 
 # Copy configuration templates
 cp ~/.claude/plugins/claude-sfdx-iq/.claude-project-template/settings.json ./.claude/settings.json
@@ -50,9 +47,6 @@ git clone https://github.com/bhanu91221/claude-sfdx-iq.git /tmp/claude-sfdx-iq
 cd /path/to/your/sfdx-project
 mkdir -p .claude
 
-# Copy rules
-cp -r /tmp/claude-sfdx-iq/rules ./.claude/rules
-
 # Copy templates
 cp /tmp/claude-sfdx-iq/.claude-project-template/settings.json ./.claude/settings.json
 cp /tmp/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./CLAUDE.md
@@ -60,34 +54,18 @@ cp /tmp/claude-sfdx-iq/.claude-project-template/CLAUDE.md ./CLAUDE.md
 
 ## What Gets Copied
 
-### Rules Directory (44 files, ~43k tokens total)
-
-```
-.claude/rules/
-├── index.md              # Rules catalog with token counts
-├── apex/                 # 9 Apex rules (~11k tokens)
-├── common/               # 9 Common rules (~6k tokens)
-├── lwc/                  # 6 LWC rules (~4.5k tokens)
-├── soql/                 # 6 SOQL rules (~6.7k tokens)
-├── flows/                # 6 Flow rules (~6.9k tokens)
-└── metadata/             # 8 Metadata rules (~8k tokens)
-```
-
-**Token Optimization**: The context-assigner agent loads only 5-8 rules per task, saving ~30,000 tokens per session.
-
 ### Configuration Files
 
 - **settings.json** — Enables the plugin for this project, configures hook profile
-- **CLAUDE.md** — Project documentation with rule references and command list
+- **CLAUDE.md** — Project documentation with command list and team conventions
+
+Commands are self-contained — each command includes its own domain standards (Apex patterns, SOQL rules, governor limits, etc.) baked inline. No per-project rules directory is needed.
 
 ## Verification
 
 After setup, verify everything is configured:
 
 ```bash
-# Check rules are installed
-ls .claude/rules/
-
 # Check settings exist
 cat .claude/settings.json
 

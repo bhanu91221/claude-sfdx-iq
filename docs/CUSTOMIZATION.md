@@ -1,6 +1,6 @@
 # Customization Guide
 
-This guide explains how to extend claude-sfdx-iq with your own agents, skills, commands, hooks, rules, and manifests.
+This guide explains how to extend claude-sfdx-iq with your own agents, commands, and hooks.
 
 ## Adding a New Agent
 
@@ -14,7 +14,7 @@ tools:
   - sf
   - grep
   - read_file
-model: claude-sonnet-4-20250514
+model: claude-sonnet-4-6
 ---
 
 # my-custom-agent
@@ -28,35 +28,7 @@ You are an expert at reviewing Apex batch classes...
 3. Confirm stateful tracking uses Database.Stateful
 ```
 
-The agent is available immediately to commands and other agents. Agent files must use lowercase-hyphen naming (e.g., `batch-reviewer.md`).
-
-## Adding a New Skill
-
-Create a directory under `skills/` with a `SKILL.md` file:
-
-```
-skills/
-  my-custom-skill/
-    SKILL.md
-```
-
-The `SKILL.md` file requires frontmatter:
-
-```markdown
----
-name: my-custom-skill
-description: Best practices for Platform Event handling
-origin: Salesforce Platform Events Developer Guide
----
-
-# Platform Event Patterns
-
-## Publishing
-
-- Use EventBus.publish() for single events...
-```
-
-Skills provide reference knowledge that agents consult during execution. They do not execute code directly.
+The agent is available immediately to commands. Agent files must use lowercase-hyphen naming (e.g., `batch-reviewer.md`).
 
 ## Adding a New Command
 
@@ -71,14 +43,54 @@ description: Analyze Platform Event subscriptions and publish volumes
 
 Analyze Platform Event usage in the current org.
 
+## Domain Standards
+
+<!-- Include any domain-specific rules or patterns the command needs inline. -->
+<!-- This replaces the need for external rule files or dynamic loading. -->
+
+- EventBus.publish() should be called outside of DML transaction context where possible
+- Daily platform event volume limits: 250,000 publish/subscribe operations
+- Use CometD or Streaming API for high-volume subscriptions
+
 ## Workflow
 
 1. Scan for Platform Event definitions in source
 2. Identify all EventBus.publish() and trigger subscriptions
 3. Report event volumes against daily limits
+
+## Agent Delegation
+
+For deep analysis, delegate to the `integration-specialist` agent.
 ```
 
 The file name (minus `.md`) becomes the slash command name. Use lowercase-hyphen naming.
+
+### Adding Flags to a Command
+
+Document flags in the command body with a workflow section for each:
+
+```markdown
+## Flags
+
+### --new
+1. Ask for the event name and payload fields
+2. Scaffold the Platform Event object definition
+3. Scaffold the publisher class and subscriber trigger
+
+### --review
+1. Identify all Event definitions and subscribers in source
+2. Check against Domain Standards above
+3. Report findings with severity
+
+### --refine
+1. Understand the requested change
+2. Apply the modification
+3. Update any related subscribers or publishers
+```
+
+## Extending an Existing Command
+
+To add domain standards or new flags to an existing command, edit the command's `.md` file directly in `commands/`. The inline standards section is plain markdown — add bullet points, tables, or sub-sections as needed.
 
 ## Adding a New Hook
 
@@ -111,35 +123,7 @@ Matcher fields:
 
 Hook scripts receive the file path as an argument and should print findings to stdout.
 
-## Modifying Rules
-
-Rules live in `rules/` subdirectories organized by domain:
-
-```
-rules/
-  common/     -- Applied to all files
-  apex/       -- Applied to .cls and .trigger files
-  lwc/        -- Applied to .js files in lwc/ directories
-  soql/       -- Applied to SOQL queries
-  flows/      -- Applied to .flow-meta.xml files
-  metadata/   -- Applied to *-meta.xml files
-```
-
-Each rule file is a markdown document with guidelines. To add a rule, create a new `.md` file in the appropriate directory. To modify, edit the existing file directly.
-
-To disable a rule file, add it to your project settings:
-
-```json
-{
-  "plugins": {
-    "claude-sfdx-iq": {
-      "disabledRules": ["rules/apex/some-rule.md"]
-    }
-  }
-}
-```
-
-## Creating Custom Manifests
+## Custom Manifests
 
 Manifests control which components are active. Create a JSON file in `manifests/`:
 
@@ -148,33 +132,21 @@ Manifests control which components are active. Create a JSON file in `manifests/
   "name": "my-team-config",
   "description": "Custom configuration for the platform team",
   "agents": [
-    "apex-reviewer",
-    "deployment-specialist",
-    "governor-limits-checker",
-    "security-reviewer",
-    "test-guide"
-  ],
-  "skills": [
-    "apex-patterns",
-    "apex-testing",
-    "deployment-strategies",
-    "governor-limits"
+    "apex-code-reviewer",
+    "devops-coordinator",
+    "security-auditor"
   ],
   "commands": [
-    "deploy",
-    "test",
-    "apex-review",
+    "apex-class",
+    "trigger",
+    "code-review",
     "security-scan",
-    "governor-check"
+    "org-health",
+    "plan"
   ],
   "hooks": [
     "apex-post-edit",
     "pre-commit"
-  ],
-  "rules": [
-    "common",
-    "apex",
-    "soql"
   ]
 }
 ```
