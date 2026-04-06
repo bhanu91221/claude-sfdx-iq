@@ -1,78 +1,94 @@
 ---
-description: Security vulnerability scan for CRUD/FLS, sharing, and injection
+description: Security vulnerability scan for CRUD/FLS, sharing model, SOQL injection, XSS, and hardcoded secrets
 ---
 
 # /security-scan
 
-Scan the entire codebase for security vulnerabilities including CRUD/FLS enforcement, sharing model violations, injection risks, and hardcoded secrets.
+Scan the entire codebase for security vulnerabilities: CRUD/FLS enforcement, sharing model violations, SOQL injection, CSP/XSS issues in LWC, and hardcoded secrets.
 
 ## Workflow
 
-0. **Load context** — Invoke the context-assigner agent with the description of this scan task. Display the announcement block (loaded skills, rules, token count) to the user before proceeding.
+### Step 1: Discover Scannable Files
 
-1. **Discover scannable files**
-   - Find all Apex classes (`.cls`) and triggers (`.trigger`)
-   - Find all LWC components (`.js`, `.html`)
-   - Find all Aura components if present
-   - Find all Visualforce pages (`.page`) and controllers
+- Apex classes: `Glob force-app/**/*.cls`
+- Apex triggers: `Glob force-app/**/*.trigger`
+- LWC JavaScript: `Glob force-app/**/lwc/**/*.js`
+- LWC HTML templates: `Glob force-app/**/lwc/**/*.html`
+- Visualforce pages: `Glob force-app/**/*.page` (if present)
 
-2. **Delegate to security-reviewer agent**
-   - Pass the full file inventory to the **security-reviewer** agent
+### Step 2: Delegate to security-auditor Agent
 
-3. **Security checks**
+Pass the full file inventory to the **security-auditor** agent for comprehensive review across:
 
-   **CRUD/FLS Enforcement (Critical)**
-   - DML operations without `Security.stripInaccessible()` or `WITH SECURITY_ENFORCED`
-   - Direct field access without FLS checks
-   - Missing `Schema.sObjectType.*.isAccessible()` / `isCreateable()` / `isUpdateable()` / `isDeletable()` checks
-   - Unsafe use of `Database.insert/update/delete` without FLS
+**CRUD/FLS Enforcement:**
+- `@AuraEnabled` methods without `WITH USER_MODE`, `WITH SECURITY_ENFORCED`, or `Security.stripInaccessible()`
+- `@RestResource` methods without access enforcement
+- Visualforce controllers without field-level checks
 
-   **Sharing Model (Critical)**
-   - Classes without `with sharing`, `without sharing`, or `inherited sharing` keyword
-   - `without sharing` used without documented justification
-   - Utility classes that should use `inherited sharing`
-   - Controllers that should enforce `with sharing`
+**Sharing Model:**
+- Apex classes missing `with sharing`, `without sharing`, or `inherited sharing` keyword
+- `without sharing` classes that are user-facing (require documented justification)
 
-   **SOQL Injection (Critical)**
-   - Dynamic SOQL built with string concatenation using user input
-   - Missing use of `String.escapeSingleQuotes()` on dynamic values
-   - Dynamic SOQL that should use bind variables instead
+**SOQL Injection:**
+- `Database.query()` with string concatenation
+- Inline SOQL built with `+` operator and user-supplied variables
+- `String.format()` used to construct SOQL
 
-   **Hardcoded Credentials (Critical)**
-   - API keys, tokens, passwords, or secrets in source code
-   - Hardcoded org IDs or record IDs
-   - Named Credentials not used for external callouts
+**LWC/CSP Security:**
+- `innerHTML` assignments with non-static values
+- `eval()` usage
+- External script loading outside `lightning/platformResourceLoader`
 
-   **LWC / Aura Security (High)**
-   - Use of `innerHTML` or `lwc:dom="manual"` without sanitization
-   - CSP violations in component markup
-   - Sensitive data exposed in client-side code
-   - Missing CSRF protection on form submissions
+**Hardcoded Secrets:**
+- Passwords, API keys, tokens, or credentials in Apex strings
+- Hardcoded endpoint URLs (should use Named Credentials)
+- Hardcoded Record Type IDs, Profile IDs, User IDs
 
-   **Visualforce Security (High)**
-   - Missing `escape="true"` on output fields
-   - Inline JavaScript with user-controlled data
-   - Missing CSRF tokens
+**Experience Cloud Guest User:**
+- Classes accessible to guest user profiles without explicit security review
+- `without sharing` classes exposed to unauthenticated users
 
-   **Callout Security (High)**
-   - HTTP instead of HTTPS for external callouts
-   - Missing certificate validation
-   - Sensitive data in URL parameters
+### Step 3: Generate Prioritized Report
 
-4. **Output format**
-   - **Critical findings first** — these must be fixed before deployment
-   - Group remaining findings by file
-   - For each finding: file, line, vulnerability type, risk description, remediation with code example
-   - End with a security score (Critical / Needs Work / Acceptable / Good)
+```
+# Security Scan Report
+
+## Summary
+| Severity | Count | Must Fix Before Deploy |
+|----------|-------|----------------------|
+| CRITICAL | X | Yes |
+| HIGH | X | Recommended |
+| MEDIUM | X | Next Sprint |
+| LOW | X | Backlog |
+
+## CRUD/FLS Compliance
+| File | Method | Enforcement | Status |
+|------|--------|-------------|--------|
+
+## Sharing Model Violations
+| File | Current Keyword | Risk | Action |
+|------|----------------|------|--------|
+
+## Injection Vulnerabilities
+| File | Line | Pattern | Fix |
+|------|------|---------|-----|
+
+## Detailed Findings
+[CRITICAL findings first, full descriptions with file:line and remediation]
+
+## Remediation Priority
+1. [Most critical — immediate fix]
+2. ...
+```
 
 ## Error Handling
 
-- If no Apex/LWC files are found, inform the user
-- If files have syntax errors, skip them but note they could not be scanned
+- If no Apex or LWC files found, inform the user
+- If a file cannot be parsed, note it in the report and continue
+- Report only actionable findings — no false positives for intentional `without sharing` with documented justification
 
-## Example Usage
+## Examples
 
 ```
 /security-scan
-/security-scan force-app/main/default/classes/
 ```

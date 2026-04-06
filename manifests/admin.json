@@ -1,63 +1,26 @@
 {
   "name": "admin",
-  "description": "Admin-focused manifest for declarative development, flows, metadata, and data modeling",
-  "tokenEstimate": 28720,
-  "tokenBreakdown": {
-    "skills": 16347,
-    "rules": 12373,
-    "agents": 0,
-    "commands": 0,
-    "hooks": 0
-  },
+  "description": "Admin-focused manifest for declarative Salesforce development",
   "components": {
     "agents": [
-      "context-assigner",
-      "admin-advisor",
       "flow-analyst",
-      "data-modeler",
-      "metadata-analyst",
-      "planner"
-    ],
-    "rules": [
-      "common/security",
-      "flows/best-practices",
-      "flows/patterns",
-      "flows/performance",
-      "flows/security",
-      "metadata/deployment",
-      "metadata/naming-conventions",
-      "metadata/organization",
-      "metadata/version-control"
-    ],
-    "skills": [
-      "flow-best-practices",
-      "data-modeling",
-      "permission-model",
-      "metadata-management",
-      "flow-to-code",
-      "deployment-strategies"
+      "solution-designer",
+      "security-auditor"
     ],
     "commands": [
-      "analyze",
-      "context",
-      "deploy",
-      "explain",
-      "retrieve",
-      "flow-review",
-      "data-model",
-      "metadata-analyze",
-      "modify",
+      "flow",
       "org-health",
-      "scaffold-flow",
-      "validate",
+      "data-model",
+      "explain",
+      "security-scan",
+      "plan",
       "csiq-help",
       "doctor",
       "setup-project",
       "status"
     ],
     "hooks": [
-      "flow-post-edit",
-      "destructive-warn"
+      "flow-post-edit"
     ]
   }
 }

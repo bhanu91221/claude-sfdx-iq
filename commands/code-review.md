@@ -1,69 +1,107 @@
 ---
-description: Full code review across all Salesforce domains
+description: Full code review across Apex, LWC, and Flows using specialized agents
 ---
 
 # /code-review
 
-Run a comprehensive code review across Apex, LWC, SOQL, security, and governor limits by orchestrating all specialized review agents.
+Run a comprehensive code review by delegating to specialized agents. Supports targeted review by domain or full codebase review.
+
+## Usage
+
+```
+/code-review                    Review all changed files (git diff)
+/code-review --apex             Review changed Apex files
+/code-review --apex <file>      Review a specific Apex file or directory
+/code-review --apex-all         Review all Apex files in the project
+/code-review --lwc              Review changed LWC components
+/code-review --lwc <component>  Review a specific LWC component
+/code-review --lwc-all          Review all LWC components
+/code-review --flow             Review changed Flows
+/code-review --flow <name>      Review a specific Flow
+/code-review --flow-all         Review all Flows in the project
+```
 
 ## Workflow
 
-0. **Load context** — Invoke the context-assigner agent with the description of this review task. Display the announcement block (loaded skills, rules, token count) to the user before proceeding.
+### Step 1: Identify Scope
 
-1. **Identify scope**
-   - If a file path or directory is provided, review only those files
-   - If no argument is given, review all changed files: run `git diff --name-only HEAD` to detect modified files
-   - If no git changes are found, ask the user which files or directories to review
-   - Categorize files by type: `.cls`, `.trigger` (Apex), `.js`, `.html`, `.css` (LWC), `.soql` (queries), metadata XML
+**No flag or partial flags — detect changed files:**
+```bash
+git diff --name-only HEAD
+git diff --name-only --cached  # Also check staged
+```
+Categorize:
+- `.cls`, `.trigger` → Apex (delegate to `apex-code-reviewer`)
+- `lwc/**/*.js`, `lwc/**/*.html` → LWC (delegate to `lwc-reviewer`)
+- `*.flow-meta.xml` → Flows (delegate to `flow-analyst`)
 
-2. **Delegate to specialized agents**
-   - **apex-reviewer**: All `.cls` and `.trigger` files — check naming conventions, method complexity, exception handling, documentation, bulkification patterns, separation of concerns
-   - **lwc-reviewer**: All LWC component directories — check reactive properties, lifecycle hooks, event handling, accessibility, error handling, template expressions
-   - **soql-optimizer**: All SOQL queries found in Apex classes — check selectivity, index usage, relationship queries, field list optimization, query plan analysis
-   - **security-reviewer**: All Apex and LWC files — check CRUD/FLS enforcement, `with sharing` usage, SOQL injection risks, XSS in LWC, sensitive data exposure, CSP compliance
-   - **governor-limits-checker**: All Apex files — check SOQL/DML in loops, heap usage risks, CPU-intensive operations, callout patterns, future/queueable usage
+**Specific file argument:** review only that file/component/flow.
 
-3. **Run each agent sequentially**
-   - Pass the relevant file list to each agent
-   - Collect findings from each agent with severity levels: Critical, High, Medium, Low, Info
-   - Track which files each finding applies to
+**`--all` variants:** Find all files of that type:
+- Apex: `Glob force-app/**/*.cls, **/*.trigger`
+- LWC: `Glob force-app/**/lwc/**/*.js`
+- Flow: `Glob force-app/**/*.flow-meta.xml`
 
-4. **Consolidate findings**
-   - Merge all findings into a single report
-   - Deduplicate overlapping findings (e.g., security and governor agents may flag the same SOQL)
-   - Group findings by severity, then by file
+If no reviewable files are found, inform the user and suggest narrowing scope or checking git status.
 
-5. **Generate report**
-   - Display a summary header with total findings by severity
-   - For each severity level (Critical first), list findings with:
-     - File path and line number (if available)
-     - Domain (Apex, LWC, SOQL, Security, Governor)
-     - Description of the issue
-     - Recommended fix with code example
-   - End with an overall health score: Critical=0-2 points deducted per finding, High=1, Medium=0.5, Low=0.25
-   - Score out of 100, starting at 100 and deducting per finding
+### Step 2: Delegate to Specialized Agents (in parallel when multiple domains)
 
-## Flags
+| Files | Agent |
+|-------|-------|
+| `.cls`, `.trigger` | **apex-code-reviewer** — bulkification, governor limits, SOQL, security, naming, error handling |
+| `lwc/**` | **lwc-reviewer** — decorators, lifecycle, events, accessibility, CSS, error/loading states |
+| `*.flow-meta.xml` | **flow-analyst** — DML in loops, fault paths, before/after save, recursion, naming |
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--path` | File or directory to review | Changed files |
-| `--severity` | Minimum severity to report | `Low` |
-| `--domain` | Limit to specific domain (apex, lwc, soql, security, governor) | All |
-| `--fix` | Auto-suggest fixes inline | `false` |
+If scope is very large (50+ files), warn the user and suggest narrowing to changed files or a specific directory.
+
+### Step 3: Consolidate Findings
+
+Merge all agent findings into a single report:
+- Deduplicate overlapping issues (same file flagged by multiple agents)
+- Group by severity: CRITICAL → HIGH → MEDIUM → LOW
+- For each finding: file path, line number (if available), domain, description, fix
+
+### Step 4: Generate Report
+
+```
+# Code Review Report
+
+## Summary
+| Domain | CRITICAL | HIGH | MEDIUM | LOW |
+|--------|----------|------|--------|-----|
+| Apex   | X        | X    | X      | X   |
+| LWC    | X        | X    | X      | X   |
+| Flows  | X        | X    | X      | X   |
+
+## Overall Health Score: X/100
+(Start at 100; -10 per CRITICAL, -5 per HIGH, -2 per MEDIUM, -1 per LOW)
+
+## Critical Findings (must fix before merge/deploy)
+...
+
+## High Findings
+...
+
+## Top 3 Action Items
+1. [Most impactful fix]
+2. ...
+3. ...
+```
 
 ## Error Handling
 
-- If no reviewable files are found, inform the user and suggest specifying a path
-- If an agent encounters a parse error, report the file as unreadable and continue with other files
-- If a file type is unrecognized, skip it and note it in the report summary
-- If the review scope is very large (50+ files), warn the user and suggest narrowing the scope
+- If an agent encounters a parse error on a file, report it as unreadable and continue
+- If a file type is unrecognized, skip it and note it in the summary
+- If git diff fails (not a git repo), ask the user to specify files
 
-## Example Usage
+## Examples
 
 ```
 /code-review
-/code-review --path force-app/main/default/classes/AccountService.cls
-/code-review --severity High --domain security
-/code-review --path force-app/main/default/lwc/accountList
+/code-review --apex
+/code-review --apex force-app/main/default/classes/AccountService.cls
+/code-review --apex-all
+/code-review --lwc accountList
+/code-review --flow Account_UpdateContactIndustry_RAF
+/code-review --flow-all
 ```

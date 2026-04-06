@@ -45,10 +45,6 @@ describe('setup-project script', () => {
 
     assert.ok(output.includes('SFDX project detected'));
     assert.ok(output.includes('Setup complete'));
-
-    // Check rules were copied
-    const rulesDir = path.join(TEMP_DIR, '.claude', 'rules');
-    assert.ok(fs.existsSync(rulesDir), '.claude/rules/ should exist');
   });
 
   it('creates .claude directory if it does not exist', () => {
@@ -70,20 +66,6 @@ describe('setup-project script', () => {
     });
 
     assert.ok(output.includes('.claude/ directory exists'));
-  });
-
-  it('backs up existing rules directory', () => {
-    fs.writeFileSync(path.join(TEMP_DIR, 'sfdx-project.json'), '{}', 'utf8');
-    const rulesDir = path.join(TEMP_DIR, '.claude', 'rules');
-    fs.mkdirSync(rulesDir, { recursive: true });
-    fs.writeFileSync(path.join(rulesDir, 'old-rule.md'), 'old content', 'utf8');
-
-    const output = execSync(`node "${SCRIPT}" "${TEMP_DIR}"`, {
-      encoding: 'utf8', cwd: ROOT, timeout: 15000
-    });
-
-    assert.ok(output.includes('backup'));
-    assert.ok(fs.existsSync(path.join(TEMP_DIR, '.claude', 'rules.backup')));
   });
 
   it('skips settings.json if it already exists', () => {
@@ -128,17 +110,6 @@ describe('setup-project script', () => {
     });
 
     assert.ok(fs.existsSync(path.join(TEMP_DIR, '.claude', 'settings.json')));
-  });
-
-  it('prints token optimization info', () => {
-    fs.writeFileSync(path.join(TEMP_DIR, 'sfdx-project.json'), '{}', 'utf8');
-
-    const output = execSync(`node "${SCRIPT}" "${TEMP_DIR}"`, {
-      encoding: 'utf8', cwd: ROOT, timeout: 15000
-    });
-
-    assert.ok(output.includes('Token Optimization'));
-    assert.ok(output.includes('paths:'));
   });
 
   it('prints next steps', () => {

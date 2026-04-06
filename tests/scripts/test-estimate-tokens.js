@@ -82,29 +82,11 @@ describe('estimate-tokens', () => {
   });
 
   describe('discoverSkills', () => {
-    it('returns an array of skills', () => {
+    it('returns an empty array since skills system was removed in v2.0', () => {
+      // Skills were removed in v2.0. discoverSkills() should return empty array gracefully.
       const skills = discoverSkills();
       assert.ok(Array.isArray(skills));
-      assert.ok(skills.length > 0);
-    });
-
-    it('each skill has required properties', () => {
-      const skills = discoverSkills();
-      for (const skill of skills) {
-        assert.ok(skill.name, `Skill missing name`);
-        assert.ok(skill.domain, `Skill ${skill.name} missing domain`);
-        assert.ok(typeof skill.tokens === 'number', `Skill ${skill.name} missing tokens`);
-        assert.ok(skill.filePath, `Skill ${skill.name} missing filePath`);
-      }
-    });
-
-    it('skills are sorted by domain then name', () => {
-      const skills = discoverSkills();
-      for (let i = 1; i < skills.length; i++) {
-        const cmp = skills[i - 1].domain.localeCompare(skills[i].domain) ||
-                    skills[i - 1].name.localeCompare(skills[i].name);
-        assert.ok(cmp <= 0, `Skills not sorted: ${skills[i - 1].name} > ${skills[i].name}`);
-      }
+      assert.strictEqual(skills.length, 0, 'No skills expected — system removed in v2.0');
     });
   });
 

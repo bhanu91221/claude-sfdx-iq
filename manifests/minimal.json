@@ -1,45 +1,16 @@
 {
   "name": "minimal",
   "description": "Core-only manifest with essential Apex development tools",
-  "tokenEstimate": 18038,
-  "tokenBreakdown": {
-    "skills": 7579,
-    "rules": 10459,
-    "agents": 0,
-    "commands": 0,
-    "hooks": 0
-  },
   "components": {
     "agents": [
-      "context-assigner",
-      "apex-reviewer",
-      "security-reviewer",
-      "test-guide",
-      "planner"
-    ],
-    "rules": [
-      "common/security",
-      "common/testing",
-      "apex/coding-style",
-      "apex/patterns",
-      "apex/bulkification",
-      "apex/governor-limits",
-      "apex/error-handling",
-      "apex/security"
-    ],
-    "skills": [
-      "governor-limits",
-      "apex-patterns",
-      "security-patterns"
+      "apex-code-reviewer",
+      "security-auditor"
     ],
     "commands": [
-      "analyze",
-      "context",
-      "deploy",
+      "apex-class",
+      "trigger",
+      "code-review",
       "explain",
-      "modify",
-      "test",
-      "apex-review",
       "security-scan",
       "csiq-help",
       "doctor",

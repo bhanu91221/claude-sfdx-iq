@@ -1,6 +1,6 @@
 # Claude SFDX IQ — Agent Instructions
 
-This is a **Salesforce DX Claude Code plugin** providing 14 specialized agents, 36 skills, 56 commands, 44 rules across 6 categories, 16 hook scripts, 7 CLI tools, 5 mode contexts, and automated hook workflows for Salesforce development.
+This is a **Salesforce DX Claude Code plugin** providing 7 specialized agents, 19 self-contained commands, 8 hook definitions, 16 hook scripts, 5 CLI tools, and 5 mode contexts for Salesforce development.
 
 ## Core Principles
 
@@ -15,35 +15,27 @@ This is a **Salesforce DX Claude Code plugin** providing 14 specialized agents, 
 
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
-| planner | SFDC implementation planning | Complex features, multi-object changes |
-| architect | Solution architecture | Data model, integration patterns, scalability |
-| apex-reviewer | Apex code quality review | After writing/modifying Apex code |
-| lwc-reviewer | LWC component review | After writing/modifying LWC components |
-| soql-optimizer | SOQL/SOSL query analysis | Query performance, selectivity issues |
-| security-reviewer | Security vulnerability scan | CRUD/FLS, sharing, injection, before commits |
-| governor-limits-checker | Governor limit analysis | Code with loops, queries, DML operations |
-| deployment-specialist | Deployment and packaging | sf deploy, package versions, destructive changes |
-| test-guide | Salesforce TDD workflow | New features, bug fixes, test coverage |
-| flow-analyst | Flow best practices review | Flow automation analysis |
-| integration-specialist | Integration patterns | REST/SOAP callouts, platform events, CDC |
-| metadata-analyst | Metadata analysis | Dependencies, unused components, org health |
-| data-modeler | Data model design | Object relationships, schema optimization |
-| admin-advisor | Declarative configuration | Permission sets, sharing rules, validation rules |
+| apex-code-reviewer | Apex quality: bulkification, SOQL selectivity, N+1, governor limits | After writing/modifying Apex code |
+| solution-designer | Solution architecture, phased implementation plans, integration design | Complex features, architectural decisions |
+| devops-coordinator | Deployment strategy, test patterns, org health, CI/CD pipelines | Deploy planning, org health checks |
+| lwc-reviewer | LWC component quality: wire, events, accessibility, performance | After writing/modifying LWC components |
+| security-auditor | CRUD/FLS, sharing model, SOQL injection, XSS, CSP, guest user | Security-sensitive code, before commits |
+| flow-analyst | Flow best practices: DML in loops, fault paths, recursion, naming | Flow automation analysis and review |
+| integration-specialist | REST/SOAP callouts, Named Credentials, platform events, CDC | Integration code, external services |
 
 ## Agent Orchestration
 
-Use agents proactively without user prompt:
-- Complex feature requests → **planner**
-- Apex code written/modified → **apex-reviewer**
-- LWC code written/modified → **lwc-reviewer**
-- SOQL queries added/changed → **soql-optimizer**
-- Bug fix or new feature → **test-guide**
-- Architectural decision → **architect**
-- Security-sensitive code → **security-reviewer**
-- Code with loops/queries → **governor-limits-checker**
-- Deployment operations → **deployment-specialist**
+Commands invoke agents automatically. Use agents proactively without user prompt:
 
-Use parallel execution for independent operations — launch multiple agents simultaneously.
+- Apex code written/modified → **apex-code-reviewer**
+- LWC code written/modified → **lwc-reviewer**
+- Security-sensitive code → **security-auditor**
+- Flow automation added/changed → **flow-analyst**
+- Integration/callout code → **integration-specialist**
+- Architectural decision → **solution-designer**
+- Deployment operations → **devops-coordinator**
+
+Use parallel execution for independent operations — launch multiple agents simultaneously (e.g., apex-code-reviewer + security-auditor for a new service class).
 
 ## Security Guidelines
 
@@ -56,7 +48,7 @@ Use parallel execution for independent operations — launch multiple agents sim
 - [ ] Connected App secrets in Named Credentials, not code
 - [ ] Error messages don't expose field names or object structure to unauthorized users
 
-**If security issue found:** STOP → use security-reviewer agent → fix CRITICAL issues → review codebase for similar issues.
+**If security issue found:** STOP → use security-auditor agent → fix CRITICAL issues → review codebase for similar issues.
 
 ## Coding Style
 
@@ -89,10 +81,10 @@ Test types (all required for Apex):
 
 ## Development Workflow
 
-1. **Plan** — Use planner agent for complex features
-2. **TDD** — Use test-guide agent, write Apex tests first
-3. **Review** — Use apex-reviewer + security-reviewer agents
-4. **Deploy** — Use deployment-specialist agent for validation and deploy
+1. **Plan** — Use solution-designer agent for complex features
+2. **TDD** — Write Apex tests first before implementation
+3. **Review** — Use apex-code-reviewer + security-auditor agents
+4. **Deploy** — Use devops-coordinator agent for deploy planning
 5. **Commit** — Conventional commits format
 
 ## Git Workflow
@@ -104,13 +96,11 @@ Test types (all required for Apex):
 ## Project Structure
 
 ```
-agents/          — 14 specialized Salesforce subagents
-skills/          — 36 Salesforce domain skills
-commands/        — 53 slash commands
+agents/          — 7 specialized Salesforce subagents
+commands/        — 19 self-contained slash commands with inline domain standards
 hooks/           — Trigger-based automations with 16 hook scripts
-rules/           — 44 always-follow guidelines (common + apex + lwc + soql + flows + metadata)
 contexts/        — 5 mode-specific context files (develop, review, debug, deploy, admin)
-scripts/         — Cross-platform Node.js utilities, 7 CLI tools (claude-sfdx-iq), 10 library scripts
+scripts/         — Cross-platform Node.js utilities, CLI tools, library scripts
 mcp-configs/     — MCP server configurations
 tests/           — Test suite
 ```

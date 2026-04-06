@@ -1,69 +1,20 @@
 {
   "name": "apex-only",
   "description": "Apex-focused manifest for backend Salesforce development",
-  "tokenEstimate": 49863,
-  "tokenBreakdown": {
-    "skills": 33850,
-    "rules": 16013,
-    "agents": 0,
-    "commands": 0,
-    "hooks": 0
-  },
   "components": {
     "agents": [
-      "context-assigner",
-      "apex-reviewer",
-      "security-reviewer",
-      "test-guide",
-      "soql-optimizer",
-      "governor-limits-checker",
-      "planner"
-    ],
-    "rules": [
-      "common/security",
-      "common/testing",
-      "apex/coding-style",
-      "apex/patterns",
-      "apex/bulkification",
-      "apex/governor-limits",
-      "apex/error-handling",
-      "apex/security",
-      "soql/anti-patterns",
-      "soql/performance",
-      "soql/query-patterns",
-      "soql/security"
-    ],
-    "skills": [
-      "apex-patterns",
-      "apex-coding-standards",
-      "apex-enterprise-patterns",
-      "apex-async-patterns",
-      "apex-testing",
-      "governor-limits",
-      "security-patterns",
-      "soql-optimization",
-      "trigger-framework",
-      "error-handling",
-      "tdd-workflow",
-      "logging-framework"
+      "apex-code-reviewer",
+      "security-auditor",
+      "solution-designer"
     ],
     "commands": [
-      "analyze",
-      "context",
-      "deploy",
+      "apex-class",
+      "trigger",
+      "async-apex",
+      "code-review",
       "explain",
-      "modify",
-      "test",
-      "apex-review",
       "security-scan",
-      "governor-check",
-      "soql-review",
-      "tdd",
-      "scaffold-apex",
-      "scaffold-trigger",
-      "scaffold-batch",
-      "test-data",
-      "explain-error",
+      "plan",
       "csiq-help",
       "doctor",
       "setup-project",
@@ -72,7 +23,6 @@
     "hooks": [
       "apex-post-edit",
       "trigger-post-edit",
-      "soql-check",
       "governor-scan",
       "security-scan"
     ]

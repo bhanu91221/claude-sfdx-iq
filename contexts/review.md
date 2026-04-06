@@ -71,13 +71,11 @@ Active during `/code-review`, `/apex-review`, `/lwc-review`, and manual review w
 
 Run these agents in parallel for comprehensive review:
 
-1. **apex-reviewer** — Code quality, patterns, naming, complexity
-2. **security-reviewer** — CRUD/FLS, sharing, injection, credentials
-3. **governor-limits-checker** — SOQL/DML in loops, query selectivity, limits
+1. **apex-code-reviewer** — Code quality, patterns, naming, bulkification, SOQL selectivity, governor limits
+2. **security-auditor** — CRUD/FLS, sharing, injection, credentials
 
 After parallel review completes:
-4. **soql-optimizer** — If SOQL issues found, deep-dive query analysis
-5. **test-guide** — If coverage gaps found, generate missing tests
+3. **flow-analyst** — If flow automation is involved, review DML in loops and fault paths
 
 ## Output Format
 

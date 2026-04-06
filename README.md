@@ -1,15 +1,13 @@
 # claude-sfdx-iq
 
-![npm test](https://img.shields.io/badge/npm%20test-829+%20passing-brightgreen)
+![npm test](https://img.shields.io/badge/npm%20test-passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue)
-![56 commands](https://img.shields.io/badge/commands-56-orange)
-![14 agents](https://img.shields.io/badge/agents-14-purple)
-![36 skills](https://img.shields.io/badge/skills-36-teal)
-![44 rules](https://img.shields.io/badge/rules-44-red)
+![19 commands](https://img.shields.io/badge/commands-19-orange)
+![7 agents](https://img.shields.io/badge/agents-7-purple)
 
 This plugin gives Claude Code deep Salesforce expertise. When you install it, Claude understands Salesforce best practices -- security, governor limits, permission models, flows, deployments -- and applies them automatically to everything it builds or reviews for you.
 
-Ask Claude to review your Apex code, design a data model, check your flows, scaffold a trigger, or deploy to a sandbox -- and it will follow Salesforce platform rules without you having to remind it.
+Ask Claude to review your Apex code, design a data model, check your flows, build a trigger, or plan a feature -- and it will follow Salesforce platform rules without you having to remind it.
 
 ---
 
@@ -17,9 +15,9 @@ Ask Claude to review your Apex code, design a data model, check your flows, scaf
 
 | If you are... | This plugin helps you... |
 |---|---|
-| **A Salesforce Admin** | Review flows, design permission sets, analyze data models, check org health, deploy metadata -- all through plain English conversation with Claude |
-| **A Salesforce Developer** | Write bulkified Apex, build secure LWC, run TDD workflows, catch governor limit violations, scaffold components with tests |
-| **A DevOps / Release Manager** | Validate deployments, generate destructive changes, manage packages, run CI/CD checks |
+| **A Salesforce Admin** | Review flows, design permission sets, analyze data models, check org health -- all through plain English conversation with Claude |
+| **A Salesforce Developer** | Write bulkified Apex, build secure LWC, create triggers, catch governor limit violations, scaffold components with tests |
+| **A DevOps / Release Manager** | Plan deployments, manage packages, run CI/CD checks |
 
 ---
 
@@ -47,9 +45,9 @@ claude plugin install claude-sfdx-iq
 /plugin install claude-sfdx-iq
 ```
 
-### Setting Up Rules for Your Salesforce Project
+### Setting Up Your Salesforce Project
 
-After installing the plugin, you need to copy rules and configuration files into each Salesforce project you work on. **This is a one-time step per project.**
+After installing the plugin, copy the plugin configuration into each Salesforce project you work on. **This is a one-time step per project.**
 
 #### Option 1 -- Run a command in your terminal (recommended)
 
@@ -76,7 +74,6 @@ Download the plugin files from [GitHub](https://github.com/bhanu91221/claude-sfd
 ```
 your-salesforce-project/
   .claude/
-    rules/           <-- copy from plugin's rules/ folder
     settings.json    <-- copy from plugin's .claude-project-template/ folder
     CLAUDE.md        <-- copy from plugin's .claude-project-template/ folder
 ```
@@ -93,11 +90,10 @@ After installation and project setup, open your Salesforce project in Claude Cod
 
 | Command | What it does |
 |---------|-------------|
-| `/flow-review` | Checks your flows for performance issues and missing fault paths |
+| `/flow --review` | Checks your flows for performance issues and missing fault paths |
 | `/org-health` | Analyzes your org's permissions, sharing rules, and metadata for technical debt |
 | `/data-model` | Helps design or analyze object relationships and field architecture |
-| `/deploy` | Deploys metadata to your org with validation |
-| `/explain-error` | Explains Salesforce error messages in plain language with fix steps |
+| `/security-scan` | Scans for CRUD/FLS, sharing, and injection vulnerabilities |
 | `/status` | Shows plugin status and org connection |
 
 Try typing `/org-health` in Claude Code. The plugin will analyze your org's permission model, sharing rules, and metadata structure, then give you a report with specific recommendations.
@@ -106,14 +102,13 @@ Try typing `/org-health` in Claude Code. The plugin will analyze your org's perm
 
 | Command | What it does |
 |---------|-------------|
-| `/apex-review` | Reviews Apex code for quality, bulkification, and security |
-| `/tdd` | Starts a test-driven development workflow (Red-Green-Refactor) |
-| `/scaffold-trigger` | Generates a complete trigger + handler + test (3 files) |
+| `/apex-class --review` | Reviews Apex code for quality, bulkification, and security |
+| `/trigger --new` | Scaffolds a complete trigger + handler + test (3 files) |
+| `/lwc --new` | Scaffolds an LWC component with JS, HTML, CSS, meta, and test |
 | `/security-scan` | Scans for CRUD/FLS, sharing, and injection vulnerabilities |
-| `/test` | Runs Apex tests with coverage analysis |
-| `/code-review` | Full review with all specialist agents running in parallel |
+| `/code-review --apex --all` | Full Apex review with specialist agents running in parallel |
 
-Run `/help` for the complete list of all 56 commands.
+Run `/help` for the full command list, or see the [Command Reference](docs/COMMAND-REFERENCE.md).
 
 > **Note:** If you see "Not an SFDX project", make sure you are in a directory with `sfdx-project.json` and you have run the setup-project step above.
 
@@ -121,13 +116,11 @@ Run `/help` for the complete list of all 56 commands.
 
 ## What It Does
 
-The plugin adds three layers of Salesforce intelligence to Claude:
+The plugin adds two layers of Salesforce intelligence to Claude:
 
-**Agents (14 specialists)** -- Think of these as 14 Salesforce consultants that Claude can call on. When you ask for a flow review, the flow analyst handles it. When you ask for a security scan, the security reviewer takes over. You never call agents directly -- they activate automatically based on what you ask.
+**Commands (19 self-contained tools)** -- Each command includes its own domain standards inline. When you run `/apex-class --review`, the command already knows Apex bulkification rules, SOQL standards, governor limits, and error handling patterns. No context loading step required.
 
-**Skills (36 knowledge areas)** -- Skills are reference guides the agents use, covering topics like governor limits, permission models, LWC testing patterns, and SOQL optimization. The plugin loads only the skills relevant to your current task to keep things fast.
-
-**Rules (44 guidelines)** -- Rules are the guardrails. They enforce best practices like "always use permission sets over profiles" and "never put database queries inside loops." Rules are checked automatically every time Claude writes or reviews code.
+**Agents (7 specialists)** -- Think of these as 7 Salesforce consultants that Claude can call on. Commands invoke them automatically when deeper expertise is needed. You never call agents directly.
 
 ### What the plugin enforces
 
@@ -138,115 +131,77 @@ The plugin adds three layers of Salesforce intelligence to Claude:
 
 ---
 
-## Commands for Admins
+## Domain Commands
 
-| Command | What it does |
-|---------|-------------|
-| `/flow-review` | Checks your flows for performance issues, missing fault paths, and loops with database operations |
-| `/org-health` | Analyzes your org's permission model, sharing rules, and metadata for technical debt |
-| `/data-model` | Helps design object relationships, external IDs, and field architecture |
-| `/scaffold-flow` | Generates a flow design blueprint following best practices |
-| `/deploy` | Deploys metadata to your org with validation |
-| `/validate` | Tests a deployment without making any changes |
-| `/retrieve` | Pulls metadata from your org into the project |
-| `/metadata-analyze` | Shows metadata dependencies and unused components |
-| `/explain-error` | Explains Salesforce errors in plain language with fix steps |
-| `/doctor` | Checks if your environment is set up correctly |
-| `/status` | Shows plugin status and org connection |
+Each domain command covers the full lifecycle of a Salesforce artifact. Use flags to select the workflow.
+
+### Apex & Backend
+
+| Command | Flags | What it does |
+|---------|-------|-------------|
+| `/apex-class` | `--new`, `--review`, `--refine`, `--bug-fix` | General Apex classes -- service layers, controllers, utilities |
+| `/trigger` | `--new`, `--review`, `--refine`, `--bug-fix` | Triggers + handler delegation (one-per-object pattern) |
+| `/async-apex` | `--new`, `--refine`, `--bug-fix` | Batch, Queueable, Schedulable, @future classes |
+| `/integration-apex` | `--new`, `--refine`, `--bug-fix` | REST/SOAP callouts and inbound web services |
+
+### Frontend
+
+| Command | Flags | What it does |
+|---------|-------|-------------|
+| `/lwc` | `--new`, `--explain`, `--refine`, `--bug-fix` | Lightning Web Components |
+
+### Flow & Process
+
+| Command | Flags | What it does |
+|---------|-------|-------------|
+| `/flow` | `--new`, `--review`, `--refine`, `--explain` | Screen Flows, Record-Triggered Flows, Scheduled Flows |
+
+### Cross-Domain
+
+| Command | Flags | What it does |
+|---------|-------|-------------|
+| `/code-review` | `--apex [file\|--all]`, `--lwc [comp\|--all]`, `--flow [name\|--all]` | Full review with specialist agents running in parallel |
+| `/explain` | `--apex [file]`, `--lwc [comp]`, `--flow [name]`, `--deep` | Explain what code does; `--deep` traces behavior across files |
+| `/security-scan` | _(no flags -- scans all)_ | CRUD/FLS, sharing model, SOQL injection, CSP, guest user security |
+
+**Flag behaviors:**
+- `--new` -- gather requirements → scaffold artifact + test class → explain what was generated
+- `--review` -- identify files → check against domain standards → delegate to agent → severity report
+- `--refine` -- understand change request → apply modification → update tests
+- `--bug-fix` -- gather symptoms → diagnose root cause → fix → explain
+- `--explain` -- describe purpose, data flow, key behaviors, dependencies
 
 ---
 
-## Commands for Developers
-
-### Code Understanding and Modification
+## Utility Commands
 
 | Command | What it does |
 |---------|-------------|
-| `/explain` | Explain what any file does — LWC components, Apex classes, triggers, Flows. Works on the active editor file or a path you provide |
-| `/analyze` | Answer specific questions about code behavior. Use `--field Status__c` to trace where a field is read or written across the codebase |
-| `/modify` | Add features, change behavior, or add field logic to existing Apex, LWC, or triggers. Reads the file first, plans the change, then applies it |
-
-### Code Review and Quality
-
-| Command | What it does |
-|---------|-------------|
-| `/apex-review` | Apex quality review (bulkification, naming, patterns) |
-| `/lwc-review` | LWC component review (decorators, events, accessibility) |
-| `/soql-review` | SOQL optimization analysis |
-| `/security-scan` | CRUD/FLS, sharing, and injection vulnerability scan |
-| `/governor-check` | Governor limit risk analysis |
-| `/flow-review` | Flow best practices check |
-| `/pmd-scan` | PMD static analysis via Salesforce Code Analyzer |
-| `/code-review` | Full review with all agents running in parallel |
-
-### Scaffolding and Testing
-
-| Command | What it does |
-|---------|-------------|
-| `/scaffold-trigger` | Generate trigger + handler + test (3 files) |
-| `/scaffold-lwc` | Generate LWC component with JS, HTML, CSS, meta, and test (5 files) |
-| `/scaffold-apex` | Generate Apex class + test |
-| `/scaffold-batch` | Generate Batch + Scheduler + test |
-| `/scaffold-integration` | Generate callout service + mock + test |
-| `/tdd` | TDD workflow -- Red-Green-Refactor for Apex and LWC |
-| `/test` | Run Apex tests with coverage analysis |
-| `/lwc-test` | Run LWC Jest tests |
-
-### Deployment and Planning
-
-| Command | What it does |
-|---------|-------------|
-| `/deploy` | Source deploy with validation and automatic test level selection |
-| `/validate` | Check-only deployment (no changes applied) |
-| `/destructive` | Generate destructiveChanges.xml |
-| `/plan` | Implementation plan for an SFDX feature |
-| `/data-model` | Design or analyze data model |
+| `/setup-project` | Copy plugin configuration to your SFDX project |
+| `/doctor` | Diagnose plugin and org configuration issues |
+| `/status` | Show plugin status and org connection |
+| `/org-health` | Org health check: security score, limits, technical debt, metadata |
+| `/data-model` | ER design, object relationships, best practices |
+| `/plan` | Implementation planning with phased roadmap |
+| `/package` | 2GP package versioning and management |
 | `/debug-log` | Retrieve and analyze Salesforce debug logs |
-| `/build-fix` | Diagnose and fix deployment or compilation errors |
-
-Run `/help` for the complete list of all 56 commands, or see the [full command reference](docs/COMMAND-REFERENCE.md).
+| `/repair` | Auto-fix common configuration problems |
 
 ---
 
-## Context Loading and Token Optimization
+## The 7 Agents
 
-The plugin loads only the rules and skills relevant to your current task — not all 43k tokens at once.
-
-When you run any command, you will see a context announcement before work begins:
-
-```
-Context Loaded for: Scaffold LWC opportunity tiles component
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Skills (3): lwc-patterns, lwc-performance, lwc-testing
-Rules (5):  lwc/coding-style, lwc/patterns, lwc/security, common/security, common/testing
-~Tokens: 9,240 / 200k session budget
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-Use `/context` to see what is currently loaded. Use `/context --reload` to reload context for a new task.
-
----
-
-## The 14 Agents
-
-The plugin includes 14 specialist agents. You do not need to call them directly -- they activate automatically when you use commands.
+The plugin includes 7 specialist agents. Commands invoke them automatically -- you do not call them directly.
 
 | Agent | What they help with |
 |-------|-------------|
-| `planner` | Building implementation plans across Apex, LWC, and metadata |
-| `architect` | Solution architecture, scalability, and integration design |
-| `apex-reviewer` | Apex code quality -- bulkification, naming, error handling |
-| `lwc-reviewer` | LWC components -- wire usage, events, accessibility, performance |
-| `soql-optimizer` | SOQL query performance -- selectivity, indexes, binding |
-| `security-reviewer` | Security -- access checks, sharing model, injection prevention |
-| `governor-limits-checker` | Governor limits -- database queries in loops, CPU, heap |
-| `flow-analyst` | Flows -- DML in loops, fault paths, best practices |
-| `deployment-specialist` | Deployments, packages, and destructive changes |
-| `test-guide` | Test-driven development for Apex and LWC Jest |
-| `integration-specialist` | REST/SOAP callouts, platform events, and Change Data Capture |
-| `metadata-analyst` | Metadata dependencies and unused components |
-| `data-modeler` | Object relationships, external IDs, and data skew |
-| `admin-advisor` | Permission sets, sharing rules, and validation rules |
+| `apex-code-reviewer` | Apex quality -- bulkification, SOQL selectivity, governor limits, N+1 detection, naming, security |
+| `solution-designer` | Solution architecture, phased implementation plans, integration design, risk assessment |
+| `devops-coordinator` | Deployment strategy, test patterns, org health analysis, CI/CD pipelines, metadata debt |
+| `lwc-reviewer` | LWC components -- wire usage, events, accessibility, performance, security |
+| `security-auditor` | Security -- CRUD/FLS, sharing model, SOQL injection, XSS, CSP, guest user risks |
+| `flow-analyst` | Flows -- DML in loops, fault paths, recursion prevention, before/after save decisions |
+| `integration-specialist` | REST/SOAP callouts, Named Credentials, platform events, Change Data Capture |
 
 ---
 
@@ -256,8 +211,8 @@ The plugin includes 14 specialist agents. You do not need to call them directly 
 |---------|----------|
 | Plugin not loading | Run `npx claude-sfdx-iq doctor` or `/doctor` to diagnose environment issues |
 | "Not an SFDX project" error | Make sure you are in a folder with `sfdx-project.json` and have run the setup-project step |
-| Org not connected | Run `npx claude-sfdx-iq status` `/status` to check your connection, then re-authenticate with `sf org login web` |
-| Something seems broken | Run `npx claude-sfdx-iq repair` `/repair` to auto-fix common configuration problems |
+| Org not connected | Run `npx claude-sfdx-iq status` or `/status` to check your connection, then re-authenticate with `sf org login web` |
+| Something seems broken | Run `npx claude-sfdx-iq repair` or `/repair` to auto-fix common configuration problems |
 
 For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.md#troubleshooting).
 
@@ -269,8 +224,8 @@ For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.m
 |----------|-------------|
 | [Installation Guide](docs/INSTALLATION.md) | Detailed installation, prerequisites, and environment setup |
 | [Architecture](docs/ARCHITECTURE.md) | Technical architecture and component flow |
-| [Command Reference](docs/COMMAND-REFERENCE.md) | All 53 commands with flags and examples |
-| [Customization](docs/CUSTOMIZATION.md) | How to add custom agents, skills, commands, and rules |
+| [Command Reference](docs/COMMAND-REFERENCE.md) | All 19 commands with flags and examples |
+| [Customization](docs/CUSTOMIZATION.md) | How to add custom agents, commands, and hooks |
 | [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines |
 | [Privacy Policy](PRIVACY.md) | What data the plugin accesses and what it does not |
 | [Security Policy](SECURITY.md) | How to report vulnerabilities |

@@ -41,12 +41,11 @@ describe('CI validators', () => {
   });
 
   describe('validate-skills', () => {
-    it('passes all skill validations', () => {
+    it('reports skills system removed', () => {
       const output = execSync(`node "${path.join(ROOT, 'scripts/ci/validate-skills.js')}"`, {
         encoding: 'utf8', cwd: ROOT, timeout: 15000
       });
-      assert.ok(output.includes('Validating skill'));
-      assert.ok(output.includes('passed'));
+      assert.ok(output.includes('Skills system removed') || output.includes('skills'));
     });
   });
 

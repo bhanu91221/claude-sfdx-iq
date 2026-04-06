@@ -13,7 +13,7 @@ cd claude-sfdx-iq
 git checkout -b feature/your-feature-name
 ```
 
-1. Install dependencies:
+3. Install dependencies:
 
 ```bash
 npm install
@@ -34,19 +34,7 @@ description: One-line description of what the agent does
 tools:
   - sf
   - grep
-model: claude-sonnet-4-20250514
----
-```
-
-### Skills (`skills/<name>/SKILL.md`)
-
-Each skill lives in its own directory. The `SKILL.md` file requires:
-
-```yaml
----
-name: skill-name
-description: One-line description
-origin: Source reference (documentation, guide, etc.)
+model: claude-sonnet-4-6
 ---
 ```
 
@@ -58,6 +46,8 @@ description: One-line description of the command
 ---
 ```
 
+Commands should include an inline domain standards section with the rules and patterns the command needs. This keeps the command self-contained — no external rule files or dynamic loading required.
+
 ### Hooks (`hooks/*.json`)
 
 ```json
@@ -68,19 +58,13 @@ description: One-line description of the command
 }
 ```
 
-### Rules (`rules/<domain>/*.md`)
-
-Plain markdown files with guidelines. No frontmatter required.
-
 ## Naming Conventions
 
 All file names use **lowercase with hyphens**:
 
 - Agents: `my-agent.md`
-- Skills directory: `my-skill/SKILL.md`
 - Commands: `my-command.md`
 - Hooks: `my-hook.json`
-- Rules: `my-rule.md`
 - Scripts: `my-script.js`
 
 Do not use underscores, camelCase, or spaces in file names.
@@ -96,10 +80,8 @@ npm test
 This executes all validators:
 
 - `validate-agents.js` -- Checks agent frontmatter (name, description, tools, model)
-- `validate-skills.js` -- Checks skill directory structure and SKILL.md frontmatter
 - `validate-commands.js` -- Checks command frontmatter (description)
 - `validate-hooks.js` -- Checks hook JSON structure (event, matcher, hooks)
-- `validate-rules.js` -- Checks rule file existence and readability
 - `validate-install-manifests.js` -- Checks manifest references resolve
 
 All validators must pass with zero errors.
@@ -113,8 +95,8 @@ Before submitting your PR, verify:
 - [ ] `npm test` passes with no errors
 - [ ] No secrets, credentials, or org-specific data in committed files
 - [ ] New components are documented (description in frontmatter is clear)
-- [ ] If adding a command, include a usage example in the command file
-- [ ] If adding an agent, specify the tools it requires
+- [ ] If adding a command, include inline domain standards and a usage example
+- [ ] If adding an agent, specify the tools it requires and the model
 - [ ] If adding a hook, include a timeout value
 
 ## Code of Conduct

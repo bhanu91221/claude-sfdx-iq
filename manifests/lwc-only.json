@@ -1,56 +1,24 @@
 {
   "name": "lwc-only",
   "description": "LWC-focused manifest for frontend Salesforce development",
-  "tokenEstimate": 20636,
-  "tokenBreakdown": {
-    "skills": 14438,
-    "rules": 6198,
-    "agents": 0,
-    "commands": 0,
-    "hooks": 0
-  },
   "components": {
     "agents": [
-      "context-assigner",
       "lwc-reviewer",
-      "security-reviewer",
-      "planner"
-    ],
-    "rules": [
-      "common/security",
-      "common/testing",
-      "lwc/coding-style",
-      "lwc/hooks",
-      "lwc/patterns",
-      "lwc/performance",
-      "lwc/security",
-      "lwc/testing"
-    ],
-    "skills": [
-      "lwc-patterns",
-      "lwc-performance",
-      "lwc-testing",
-      "security-patterns",
-      "aura-patterns"
+      "security-auditor"
     ],
     "commands": [
-      "analyze",
-      "context",
-      "deploy",
+      "lwc",
+      "code-review",
       "explain",
-      "lwc-review",
-      "lwc-test",
-      "modify",
-      "scaffold-lwc",
       "security-scan",
-      "explain-error",
       "csiq-help",
       "doctor",
       "setup-project",
       "status"
     ],
     "hooks": [
-      "lwc-post-edit"
+      "lwc-post-edit",
+      "security-scan"
     ]
   }
 }

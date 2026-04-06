@@ -2,8 +2,6 @@
   "plugins": {
     "claude-sfdx-iq": {
       "enabled": true,
-      "rulesPath": "./.claude/rules",
-      "contextAssignerEnabled": true,
       "hookProfile": "standard"
     }
   },
@@ -14,6 +12,6 @@
   "metadata": {
     "projectType": "sfdx",
     "setupComplete": true,
-    "installedVersion": "1.5.6"
+    "installedVersion": "2.0.0"
   }
 }

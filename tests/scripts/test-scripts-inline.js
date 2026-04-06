@@ -136,9 +136,9 @@ describe('CLI scripts inline coverage', () => {
   });
 
   describe('validate-skills.js', () => {
-    it('validates skill files', () => {
+    it('exits cleanly — skills system removed', () => {
       const r = requireScript(path.join(ROOT, 'scripts/ci/validate-skills.js'), []);
-      assert.ok(r.stdout.includes('Validating skill') || r.stdout.includes('passed'));
+      assert.ok(r.stdout.includes('Skills system removed') || r.stdout.includes('skills'));
     });
   });
 

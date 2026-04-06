@@ -56,12 +56,12 @@ Active when editing Apex (.cls, .trigger), LWC (.js, .html, .css), or Flow (.flo
 - Mock external callouts with HttpCalloutMock
 
 ### Agent Delegation
-- Complex architecture decisions -> delegate to `architect` agent
-- Security concerns -> delegate to `security-reviewer` agent
-- Performance or governor limit issues -> delegate to `governor-limits-checker` agent
-- SOQL query optimization -> delegate to `soql-optimizer` agent
-- New feature planning -> delegate to `planner` agent
-- Deployment questions -> delegate to `deployment-specialist` agent
+- Complex architecture decisions -> delegate to `solution-designer` agent
+- Security concerns -> delegate to `security-auditor` agent
+- Performance or governor limit issues -> delegate to `apex-code-reviewer` agent
+- SOQL query optimization -> delegate to `apex-code-reviewer` agent
+- New feature planning -> delegate to `solution-designer` agent
+- Deployment questions -> delegate to `devops-coordinator` agent
 
 ### Pre-Save Checklist
 - [ ] No SOQL or DML in loops
