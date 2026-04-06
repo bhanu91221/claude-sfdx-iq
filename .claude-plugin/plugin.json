@@ -12,7 +12,6 @@
       "./hooks/soql-check.json",
       "./hooks/flow-post-edit.json",
       "./hooks/governor-scan.json",
-      "./hooks/destructive-warn.json",
       "./hooks/security-scan.json"
     ],                              
   "homepage": "https://github.com/bhanu91221/claude-sfdx-iq",
