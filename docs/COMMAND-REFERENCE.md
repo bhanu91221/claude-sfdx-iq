@@ -185,6 +185,8 @@ Delegates to `security-auditor` agent.
 | `/plan` | Implementation planning with phased roadmap | `/plan` |
 | `/package` | 2GP package versioning and management | `/package` |
 | `/debug-log` | Retrieve and analyze Salesforce debug logs | `/debug-log` |
+| `/apex-test` | Create or improve Apex test classes with coverage targeting | `/apex-test AccountService.cls` |
+| `/handoff` | Generate session summary for context continuity | `/handoff --save` |
 | `/repair` | Auto-fix common configuration problems | `/repair` |
 
 **Agent delegation for utility commands:**

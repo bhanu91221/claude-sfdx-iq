@@ -2,7 +2,7 @@
 
 ![npm test](https://img.shields.io/badge/npm%20test-passing-brightgreen)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue)
-![19 commands](https://img.shields.io/badge/commands-19-orange)
+![21 commands](https://img.shields.io/badge/commands-21-orange)
 ![7 agents](https://img.shields.io/badge/agents-7-purple)
 
 This plugin gives Claude Code deep Salesforce expertise. When you install it, Claude understands Salesforce best practices -- security, governor limits, permission models, flows, deployments -- and applies them automatically to everything it builds or reviews for you.
@@ -118,7 +118,7 @@ Run `/help` for the full command list, or see the [Command Reference](docs/COMMA
 
 The plugin adds two layers of Salesforce intelligence to Claude:
 
-**Commands (19 self-contained tools)** -- Each command includes its own domain standards inline. When you run `/apex-class --review`, the command already knows Apex bulkification rules, SOQL standards, governor limits, and error handling patterns. No context loading step required.
+**Commands (21 self-contained tools)** -- Each command includes its own domain standards inline. When you run `/apex-class --review`, the command already knows Apex bulkification rules, SOQL standards, governor limits, and error handling patterns. No context loading step required.
 
 **Agents (7 specialists)** -- Think of these as 7 Salesforce consultants that Claude can call on. Commands invoke them automatically when deeper expertise is needed. You never call agents directly.
 
@@ -185,6 +185,8 @@ Each domain command covers the full lifecycle of a Salesforce artifact. Use flag
 | `/plan` | Implementation planning with phased roadmap |
 | `/package` | 2GP package versioning and management |
 | `/debug-log` | Retrieve and analyze Salesforce debug logs |
+| `/apex-test` | Create or improve Apex test classes with coverage targeting |
+| `/handoff` | Generate session summary for context continuity across conversations |
 | `/repair` | Auto-fix common configuration problems |
 
 ---
@@ -224,7 +226,7 @@ For more troubleshooting steps, see the [Installation Guide](docs/INSTALLATION.m
 |----------|-------------|
 | [Installation Guide](docs/INSTALLATION.md) | Detailed installation, prerequisites, and environment setup |
 | [Architecture](docs/ARCHITECTURE.md) | Technical architecture and component flow |
-| [Command Reference](docs/COMMAND-REFERENCE.md) | All 19 commands with flags and examples |
+| [Command Reference](docs/COMMAND-REFERENCE.md) | All 21 commands with flags and examples |
 | [Customization](docs/CUSTOMIZATION.md) | How to add custom agents, commands, and hooks |
 | [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines |
 | [Privacy Policy](PRIVACY.md) | What data the plugin accesses and what it does not |

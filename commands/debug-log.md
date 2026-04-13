@@ -1,5 +1,7 @@
 ---
 description: Retrieve and analyze Salesforce debug logs
+argument-hint: "[--target-org <alias>] [--number <n> | --tail | --log-id <id>]"
+allowed-tools: [Read, Glob, Bash]
 ---
 
 # /debug-log
@@ -64,7 +66,7 @@ Retrieve debug logs from a Salesforce org, parse them for issues, and provide ac
    - Queries to optimize (slow or redundant)
    - DML to consolidate
    - Code paths to move to async
-   - Delegate to `governor-limits-checker` agent if limits are concerning
+   - Delegate to `apex-code-reviewer` agent if limits are concerning
 
 ## Flags
 

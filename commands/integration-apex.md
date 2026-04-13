@@ -1,5 +1,7 @@
 ---
 description: Create, refine, or debug Salesforce integration Apex (REST/SOAP callouts, inbound REST/SOAP services)
+argument-hint: "[--new | --refine | --bug-fix] [ClassName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /integration-apex

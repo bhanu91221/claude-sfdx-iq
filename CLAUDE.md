@@ -7,15 +7,15 @@ This file provides guidance to Claude Code when working with the claude-sfdx-iq 
 This is the **claude-sfdx-iq plugin repository** — a Claude Code plugin that transforms Claude into a Salesforce development expert.
 
 **Distribution Model:**
-- **Global Installation** (marketplace): Agents, skills, commands, hooks → `~/.claude/plugins/claude-sfdx-iq/`
-- **Project Installation** (per SFDX project): Rules → `.claude/rules/` (copied via `npx claude-sfdx-iq setup-project`)
+- **Global Installation** (marketplace): Agents, commands, hooks → `~/.claude/plugins/claude-sfdx-iq/`
+- **Project Setup** (per SFDX project): Settings + CLAUDE.md template → `.claude/` (via `npx claude-sfdx-iq setup-project`)
 
-**Why This Approach:**
-- Agents/skills/commands work globally (available in all SFDX projects)
-- Rules are project-specific (avoid loading 43k tokens in non-SFDX contexts)
-- context-assigner agent loads only 5-8 relevant rules per task (saves ~30k tokens)
+**Architecture (v2.0.1):**
+- Commands are **self-contained** — domain standards are baked in, no separate rules or context loading required
+- Agents are invoked by commands for domain-specific review and analysis
+- Hooks provide automated quality gates on file save
 
-This is a **Claude Code plugin** — a collection of production-ready agents, skills, hooks, commands, rules, and MCP configurations specialized for Salesforce DX development. Covers Apex, LWC, SOQL, Flows, metadata management, packaging, and CI/CD.
+This is a **Claude Code plugin** — production-ready agents, commands, hooks, and MCP configurations specialized for Salesforce DX development. Covers Apex, LWC, SOQL, Flows, metadata management, packaging, and CI/CD.
 
 ## Running Tests
 
@@ -25,69 +25,60 @@ npm test
 
 # Run individual validators
 node scripts/ci/validate-agents.js
-node scripts/ci/validate-skills.js
 node scripts/ci/validate-commands.js
 node scripts/ci/validate-hooks.js
 ```
 
 ## Architecture
 
-The project is organized into core components:
-
 ### Distributed Globally (via plugin installation)
-- **agents/** — 14 specialized subagents (apex-reviewer, lwc-reviewer, soql-optimizer, context-assigner, etc.)
-- **skills/** — 36 Salesforce domain skills (apex-patterns, governor-limits, lwc-testing, etc.)
-- **commands/** — 56 slash commands (/deploy, /test, /apex-review, /analyze, /explain, /modify, etc.)
-- **hooks/** — 6 hook JSON definitions + 16 hook scripts (post-edit scans, quality gates)
-- **contexts/** — 5 mode-specific context files (develop, review, debug, deploy, admin)
-- **scripts/** — Cross-platform Node.js utilities (claude-sfdx-iq CLI, setup-project, hook scripts, lib)
+- **agents/** — 7 specialized subagents (apex-code-reviewer, lwc-reviewer, flow-analyst, security-auditor, integration-specialist, devops-coordinator, solution-designer) + reference docs (*-ref.md)
+- **commands/** — 21 slash commands with baked-in domain standards
+- **hooks/** — 5 hook JSON definitions + 16 hook scripts (quality gates, SOQL checks, Flow checks)
+- **examples/** — Code examples (integration patterns, Apex, LWC)
+- **scripts/** — Cross-platform Node.js utilities (claude-sfdx-iq CLI, hook scripts, lib)
 - **mcp-configs/** — MCP server configurations for Salesforce integrations
 
 ### Copied Per-Project (via npx claude-sfdx-iq setup-project)
-- **rules/** — 44 rules (~43k tokens total, loaded dynamically by context-assigner)
-  - common/ (9 rules)
-  - apex/ (9 rules)
-  - lwc/ (6 rules)
-  - soql/ (6 rules)
-  - flows/ (6 rules)
-  - metadata/ (8 rules)
 - **.claude-project-template/** — Project configuration templates (settings.json, CLAUDE.md)
 
 ### Development Only
 - **tests/** — Test suite for scripts and utilities (validators, unit tests)
-- **examples/** — Example code (trigger-handler, LWC, integration, batch)
+- **schemas/** — JSON Schema validators for plugin components
 
 ## Key Commands
 
-- `/deploy` — Source deploy with validation and tests
-- `/test` — Run Apex tests with coverage analysis
-- `/apex-review` — Apex code quality review
-- `/security-scan` — CRUD/FLS/sharing/injection scan
-- `/governor-check` — Governor limit risk analysis
-- `/tdd` — Salesforce TDD workflow (Apex + LWC Jest)
-- `/scaffold-trigger` — Generate trigger + handler boilerplate
-- `/scaffold-lwc` — Generate LWC component boilerplate
-- `/code-review` — Full code review with parallel agent orchestration
-- `/debug-log` — Analyze Salesforce debug logs
-- `/build-fix` — Diagnose and fix build/deploy errors
-- `/explain-error` — Explain Salesforce error messages
-- `/validate` — Validate deployment without executing
-- `/destructive` — Manage destructive metadata changes
-- `/context` — Show loaded context, browse available skills/rules
-- `/analyze` — Deep code analysis: answer questions about behavior, trace fields across codebase
-- `/explain` — Explain what any file does (LWC, Apex, triggers, Flows)
-- `/modify` — Add features, change behavior, or add field logic to existing code
+**Domain Commands** (use flags for workflows):
+- `/apex-class` — Create, review, refine, or bug-fix Apex classes
+- `/trigger` — Trigger + handler class lifecycle
+- `/async-apex` — Batch, Queueable, Schedulable, @future, Platform Events
+- `/integration-apex` — REST/SOAP callouts, inbound REST/SOAP services
+- `/lwc` — Lightning Web Components full lifecycle
+- `/flow` — Salesforce Flows design, review, refine
+- `/code-review` — Full code review via parallel agent orchestration
+- `/explain` — Explain any Apex, LWC, trigger, or Flow file
+- `/security-scan` — CRUD/FLS/sharing/injection vulnerability scan
+- `/data-model` — ER design, object relationships
+
+**Utility Commands:**
+- `/apex-test` — Create or improve Apex test classes with coverage targeting
+- `/debug-log` — Retrieve and analyze Salesforce debug logs
+- `/org-health` — Org health: security score, metadata debt
+- `/plan` — Implementation planning
+- `/package` — 2GP package management
+- `/handoff` — Generate session summary for context handoff
+- `/setup-project` — Initialize plugin config for this project
+- `/status` / `/doctor` / `/repair` / `/csiq-help` — CLI utilities
 
 ## CLI Tools
 
-Available via `npx` or as slash commands (for corporate VPN / blocked npm):
+Available via `npx` or as slash commands:
 
-- `npx claude-sfdx-iq setup-project` or `/setup-project` — **Most Important**: Copy rules + config to an SFDX project
+- `npx claude-sfdx-iq setup-project` or `/setup-project` — Copy config to an SFDX project
 - `npx claude-sfdx-iq help` or `/csiq-help` — Show available CLI commands
 - `npx claude-sfdx-iq status` or `/status` — Check plugin and org status
-- `npx claude-sfdx-iq doctor` or `/doctor` — Diagnose configuration issues (Node, sf CLI, Git, org)
+- `npx claude-sfdx-iq doctor` or `/doctor` — Diagnose configuration issues
 - `npx claude-sfdx-iq repair` or `/repair` — Auto-fix common configuration problems
-- `npx claude-sfdx-iq list` or `/list` — List installed components (agents, skills, commands, rules)
 
 ## Core Principles
 
@@ -97,7 +88,7 @@ Available via `npx` or as slash commands (for corporate VPN / blocked npm):
 4. **Bulkification Always** — All code must handle 200+ records in trigger context
 5. **Agent-First** — Delegate to specialized agents for domain tasks
 6. **Plan Before Execute** — Plan complex features before writing code
-7. **Token Optimized** — Dynamic rule loading via context-assigner (5-8 rules per task)
+7. **Token Optimized** — Self-contained commands load only what's needed per task
 
 ## Development Notes
 
@@ -107,8 +98,7 @@ Available via `npx` or as slash commands (for corporate VPN / blocked npm):
 - One trigger per object with handler delegation
 - Permission sets over profiles
 - Agent format: Markdown with YAML frontmatter (name, description, tools, model)
-- Skill format: Markdown with SKILL.md in each skill directory
-- Command format: Markdown with description frontmatter
+- Command format: Markdown with description, argument-hint, allowed-tools frontmatter
 - Hook format: JSON with matcher conditions and command hooks
 
 ## Salesforce Governor Limits Reference
@@ -128,8 +118,7 @@ Available via `npx` or as slash commands (for corporate VPN / blocked npm):
 
 Follow the formats in CONTRIBUTING.md:
 - Agents: Markdown with frontmatter (name, description, tools, model)
-- Skills: SKILL.md with frontmatter (name, description, origin)
-- Commands: Markdown with description frontmatter
+- Commands: Markdown with description, argument-hint, and allowed-tools frontmatter
 - Hooks: JSON with matcher and hooks array
 
-File naming: lowercase with hyphens (e.g., `apex-reviewer.md`, `soql-optimization`)
+File naming: lowercase with hyphens (e.g., `apex-code-reviewer.md`, `apex-class.md`)

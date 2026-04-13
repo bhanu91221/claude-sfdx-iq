@@ -21,24 +21,9 @@ describe('status script', () => {
     assert.ok(output.includes('Agents'));
   });
 
-  it('lists skills count', () => {
-    const output = execSync(`node "${SCRIPT}"`, { encoding: 'utf8', cwd: ROOT, timeout: 15000 });
-    assert.ok(output.includes('Skills'));
-  });
-
   it('lists commands count', () => {
     const output = execSync(`node "${SCRIPT}"`, { encoding: 'utf8', cwd: ROOT, timeout: 15000 });
     assert.ok(output.includes('Commands'));
-  });
-
-  it('lists rules count', () => {
-    const output = execSync(`node "${SCRIPT}"`, { encoding: 'utf8', cwd: ROOT, timeout: 15000 });
-    assert.ok(output.includes('Rules'));
-  });
-
-  it('shows rules by category', () => {
-    const output = execSync(`node "${SCRIPT}"`, { encoding: 'utf8', cwd: ROOT, timeout: 15000 });
-    assert.ok(output.includes('Rules by Category'));
   });
 
   it('shows available profiles', () => {

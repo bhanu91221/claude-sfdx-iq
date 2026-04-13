@@ -1,5 +1,7 @@
 ---
 description: Full code review across Apex, LWC, and Flows using specialized agents
+argument-hint: "[--apex | --lwc | --flow | --apex-all | --lwc-all | --flow-all] [file or component]"
+allowed-tools: [Read, Glob, Grep, Bash]
 ---
 
 # /code-review

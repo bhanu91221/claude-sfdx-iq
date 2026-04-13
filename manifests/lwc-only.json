@@ -17,8 +17,7 @@
       "status"
     ],
     "hooks": [
-      "lwc-post-edit",
-      "security-scan"
+      "lwc-post-edit"
     ]
   }
 }

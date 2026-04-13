@@ -1,5 +1,7 @@
 ---
 description: Diagnose environment configuration for Salesforce development (alternative to npx claude-sfdx-iq doctor)
+argument-hint: ""
+allowed-tools: [Glob, Bash]
 ---
 
 # /doctor

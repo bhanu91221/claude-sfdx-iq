@@ -12,10 +12,6 @@ This is a Salesforce DX project using [org type: scratch/sandbox/production].
 
 This project uses the **claude-sfdx-iq** plugin for Salesforce development. Commands are self-contained — each command includes its domain standards inline. Invoke commands directly; no context loading step required.
 
-### Plugin Configuration
-- **Installed**: v2.0.0
-- **Hook Profile**: `standard` (balanced checks)
-
 ### Available Commands
 
 **Domain Commands** (use flags for different workflows):
@@ -24,7 +20,7 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development. Comm
 |---------|-------|---------|
 | `/apex-class` | `--new`, `--review`, `--refine`, `--bug-fix` | Service, Selector, Controller, Domain, Utility classes |
 | `/trigger` | `--new`, `--review`, `--refine`, `--bug-fix` | Triggers + handler classes |
-| `/async-apex` | `--new`, `--refine`, `--bug-fix` | Batch, Queueable, Schedulable, @future |
+| `/async-apex` | `--new`, `--refine`, `--bug-fix` | Batch, Queueable, Schedulable, @future, Platform Events |
 | `/integration-apex` | `--new`, `--refine`, `--bug-fix` | REST/SOAP callouts, inbound services |
 | `/lwc` | `--new`, `--explain`, `--refine`, `--bug-fix` | Lightning Web Components |
 | `/flow` | `--new`, `--review`, `--refine`, `--explain` | Salesforce Flows |
@@ -36,6 +32,8 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development. Comm
 
 | Command | Purpose |
 |---------|---------|
+| `/apex-test` | Create or improve Apex test classes with coverage targeting |
+| `/debug-log` | Retrieve and analyze Salesforce debug logs |
 | `/setup-project` | Initialize plugin config for this project |
 | `/doctor` | Diagnose plugin/org configuration |
 | `/status` | Org + plugin status overview |
@@ -43,6 +41,7 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development. Comm
 | `/data-model` | ER design, object relationships |
 | `/plan` | Implementation planning |
 | `/package` | 2GP package management |
+| `/handoff` | Generate session summary for context continuity |
 
 ## Development Workflow
 
@@ -67,6 +66,12 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development. Comm
 - Commit format: `feat|fix|refactor|test: description`
 - 90%+ test coverage required for all Apex classes
 
+## LWC Standards
+
+- Avoid `@track` for primitives — all LWC properties are reactive since Winter '20
+- Use `@track` only for object/array properties needing deep reactivity (mutation of nested fields)
+- Always handle loading, error, and data states in templates
+
 ## External Integrations
 
 <!-- List named credentials and their purposes -->
@@ -83,10 +88,15 @@ This project uses the **claude-sfdx-iq** plugin for Salesforce development. Comm
 Current hook profile: **standard** (balanced checks)
 
 Available profiles:
-- `minimal` — Critical checks only (fastest)
-- `standard` — Balanced checks (default)
-- `strict` — All checks including style warnings
+- `minimal` — SOQL/DML-in-loop detection only (fastest)
+- `standard` — + sharing keyword, hardcoded IDs, security checks (default)
+- `strict` — All checks including callouts in loops, enqueue in loops
 
 To change: Set `CSIQ_HOOK_PROFILE=minimal` in `.claude/settings.json`
 
-To disable specific hooks: Set `CSIQ_DISABLED_HOOKS="post-edit-pmd-scan,post-edit-debug-warn"`
+To disable specific checks: Set `CSIQ_DISABLED_HOOKS="no-soql-in-loop,no-hardcoded-secrets"` (comma-separated rule names)
+
+## Session Handoff
+
+For long development sessions, use `/handoff --save` to create a `HANDOFF.md` at end of session.
+Resume next session with: "Read HANDOFF.md and continue from where we left off."

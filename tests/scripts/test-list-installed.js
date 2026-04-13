@@ -20,9 +20,8 @@ describe('list-installed script', () => {
     const output = run();
     assert.ok(output.includes('Installed Components'));
     assert.ok(output.includes('AGENTS'));
-    assert.ok(output.includes('SKILLS'));
     assert.ok(output.includes('COMMANDS'));
-    assert.ok(output.includes('RULES'));
+    assert.ok(output.includes('HOOKS'));
   });
 
   it('filters by agents category', () => {
@@ -30,19 +29,14 @@ describe('list-installed script', () => {
     assert.ok(output.includes('AGENTS'));
   });
 
-  it('filters by skills category', () => {
-    const output = run('--category skills');
-    assert.ok(output.includes('SKILLS'));
-  });
-
   it('filters by commands category', () => {
     const output = run('--category commands');
     assert.ok(output.includes('COMMANDS'));
   });
 
-  it('filters by rules category', () => {
-    const output = run('--category rules');
-    assert.ok(output.includes('RULES'));
+  it('filters by hooks category', () => {
+    const output = run('--category hooks');
+    assert.ok(output.includes('HOOKS'));
   });
 
   it('shows total count', () => {

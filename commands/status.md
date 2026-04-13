@@ -1,5 +1,7 @@
 ---
 description: Show plugin and Salesforce org status (alternative to npx claude-sfdx-iq status)
+argument-hint: ""
+allowed-tools: [Glob, Bash]
 ---
 
 # /status

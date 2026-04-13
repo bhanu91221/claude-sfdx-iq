@@ -2,7 +2,7 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "**/*.flow-meta.xml",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",

@@ -1,5 +1,7 @@
 ---
 description: Fix broken plugin configuration and missing files (alternative to npx claude-sfdx-iq repair)
+argument-hint: ""
+allowed-tools: [Glob, Bash]
 ---
 
 # /repair

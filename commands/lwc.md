@@ -1,5 +1,7 @@
 ---
 description: Create, explain, refine, or debug Lightning Web Components
+argument-hint: "[--new | --explain | --refine | --bug-fix] [componentName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /lwc
@@ -142,7 +144,7 @@ export default class AccountSummaryCard extends NavigationMixin(LightningElement
 **LWC Standards:**
 - `@api` for public properties (exposed to parent or App Builder)
 - `@wire` for reactive data fetching (re-executes when `$property` changes)
-- `@track` is not needed for reactive primitives in modern LWC (all properties are reactive in Winter '20+)
+- `@track` is **not needed for primitives** — all properties are reactive since Winter '20. Use `@track` only for object/array properties that need deep reactivity (mutation of nested fields)
 - Always handle loading, error, and data states in templates
 - Use `lightning-*` base components instead of custom HTML where possible
 - SLDS design tokens for spacing and colors — no hardcoded pixel values or colors
@@ -202,6 +204,43 @@ describe('c-account-summary-card', () => {
     });
 });
 ```
+
+### Apex Controller Standards (for LWC @AuraEnabled methods)
+
+When creating or modifying Apex controllers to support an LWC component, apply these standards:
+
+- Class must use `with sharing` — never omit or use `without sharing` in controllers
+- All `@AuraEnabled` SOQL must use `WITH USER_MODE` or `WITH SECURITY_ENFORCED`
+- Cacheable methods (`cacheable=true`): side-effect-free only — no DML, no callouts, no state changes
+- Non-cacheable methods: use `Database.insert/update/delete` with proper error handling; wrap DML errors and throw `AuraHandledException`
+- Method parameters must be typed — never accept generic `Object` for user-supplied data
+- Return typed wrapper classes or SObject lists — not raw `Map<String, Object>`
+
+```apex
+public with sharing class AccountController {
+
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(Id ownerId) {
+        return [SELECT Id, Name, Industry, OwnerId
+                FROM Account WHERE OwnerId = :ownerId
+                WITH USER_MODE ORDER BY Name LIMIT 200];
+    }
+
+    @AuraEnabled
+    public static void updateAccount(Id accountId, String industry) {
+        try {
+            Account acc = new Account(Id = accountId, Industry = industry);
+            SObjectAccessDecision decision = Security.stripInaccessible(
+                AccessType.UPDATABLE, new List<Account>{ acc });
+            update decision.getRecords();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+}
+```
+
+**When touching Apex during `/lwc` work:** Verify sharing keyword and CRUD/FLS enforcement. If deeper Apex review is needed, delegate to `apex-code-reviewer` agent.
 
 ### Generate Output
 Create all component files + Apex controller (if data needed) + Jest test file.

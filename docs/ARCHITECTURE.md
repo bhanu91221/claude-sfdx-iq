@@ -74,7 +74,7 @@ Hook definitions live in `hooks/` as JSON files. Each hook specifies:
 - **command**: the script or tool to execute
 - **args**: arguments passed to the command
 
-Example from `hooks/apex-post-edit.json`: when an Apex class is saved, the PMD scanner runs and outputs findings inline.
+Example from `hooks/apex-post-edit.json`: when an Apex class is saved, `apex-quality-gate.js` runs with profile-aware checks. The profile is controlled by `CSIQ_HOOK_PROFILE` in `.claude/settings.json` (`minimal` / `standard` / `strict`).
 
 ## Extension Points
 

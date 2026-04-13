@@ -1,5 +1,7 @@
 ---
 description: Manage second-generation (2GP) package versions
+argument-hint: "[--create | --promote | --install | --list] [package alias]"
+allowed-tools: [Read, Glob, Bash]
 ---
 
 # /package

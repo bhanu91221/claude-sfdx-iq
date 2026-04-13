@@ -4,6 +4,45 @@ All notable changes to claude-sfdx-iq will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.1] - 2026-04-13
+
+### Fixed
+- Dead agent references: `governor-limits-checker` in `/debug-log` (→ `apex-code-reviewer`) and `data-modeler` in `/data-model` (→ `solution-designer`)
+- Removed stale `context-assigner` reference in `/setup-project` summary output
+- Corrected hook count in `marketplace.json` and `AGENTS.md` (was "8 hooks", now correctly "5 hooks")
+- Removed dead `rules/` references from `AGENTS.md`, `package.json`, and `scripts/status.js`
+- Updated `CLAUDE.md` (repo root) to reflect v2.0.1 architecture accurately
+- Fixed stale `@track` guidance in `commands/lwc.md` and `.claude-project-template/CLAUDE.md`
+- Removed stale `/tdd`, `/apex-review`, `/lwc-review` references across docs
+
+### Added
+- **`/apex-test` command** — Create or improve Apex test classes; flags: `--coverage [target%]`, `--bulk`, `--mock`. Includes TestDataFactory pattern, HttpCalloutMock, bulk testing, Assert class usage.
+- **`/handoff` command** — Generate session summary (`/handoff --save` writes HANDOFF.md). Captures what was built, decisions made, and next steps.
+- **`agents/soql-specialist-ref.md`** — Deep SOQL reference for `apex-code-reviewer`: LDV patterns, query plan analysis, selectivity, dynamic SOQL safety, aggregate queries, anti-patterns.
+- **`examples/integration/`** — 8 copy-ready Apex integration examples extracted from `integration-specialist` agent: named-credentials, rest-client, rest-resource, platform-events, change-data-capture, async-callout, retry-backoff, circuit-breaker.
+- **`scripts/hooks/apex-quality-gate.js`** — Consolidated Apex hook runner. Replaces 3 separate Node.js spawns (apex-lint + governor-scan + security-scan) per `.cls` save with one profile-aware script.
+- **Platform Events section** in `/async-apex` command — publish/subscribe patterns, `setResumeCheckpoint()`, PE governor limit budget separation.
+- **Recursion Prevention section** in `/trigger` command — static Boolean pattern, per-operation flag pattern, TriggerHandler framework guidance.
+- **Apex Controller Standards section** in `/lwc` command — sharing keywords, `@AuraEnabled` rules, `WITH USER_MODE`, `stripInaccessible()`, `AuraHandledException`.
+- **Session handoff convention** in `.claude-project-template/CLAUDE.md`.
+- `argument-hint` and `allowed-tools` frontmatter added to all 21 commands.
+
+### Changed
+- **Hook consolidation**: `hooks/apex-post-edit.json`, `hooks/governor-scan.json`, `hooks/security-scan.json` merged into single `apex-post-edit.json` → `apex-quality-gate.js`. Reduces per-`.cls`-save overhead from 3 Node.js processes to 1. Profile-aware: `minimal` (SOQL/DML loops only) / `standard` (+ security, default) / `strict` (all checks).
+- **`integration-specialist.md`** slimmed from 612 lines (~12,000 tokens) to ~150 lines (~3,000 tokens). Code examples moved to `examples/integration/`.
+- **`agents/solution-designer.md`** — Documented why Opus model is used (multi-constraint architecture reasoning).
+- **`scripts/status.js`** — Removed rules and skills counting; updated component labels to match v2.0.1 structure.
+- **`.claude-project-template/CLAUDE.md`** — Added `/apex-test` and `/handoff`, fixed `@track` guidance, added hook profile details, added session handoff section, removed version pin and duplicate sections.
+- Removed `tokens:` field from all 7 agent frontmatter (was inaccurate since v2.0.0 rewrite).
+
+### Removed
+- **`contexts/`** directory — all 5 context files (develop.md, review.md, debug.md, deploy.md, admin.md) deleted. Orphaned v1.x mechanism, never loaded in v2.0.0. Content is covered inline in commands.
+- **`skills/`** directory — empty scaffold deleted. Skills system was removed in v2.0.0; empty directory was confusing.
+- `hooks/governor-scan.json` — consolidated into apex-post-edit hook
+- `hooks/security-scan.json` — consolidated into apex-post-edit hook
+- `validate-rules.js` and `validate-skills.js` from npm test script (no longer applicable)
+- `"rules/"` and `"contexts/"` from npm package files list
+
 ## [2.0.0] - 2026-04-06
 
 ### Changed (Breaking)

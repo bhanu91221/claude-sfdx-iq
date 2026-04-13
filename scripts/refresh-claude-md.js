@@ -44,10 +44,8 @@ if (!fs.existsSync(TEMPLATE_PATH)) {
 
 let template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
 
-// Read active profile or manifest for token info
+// Read active profile or manifest for profile name
 let activeProfileName = 'default';
-let tokenEstimate = 0;
-let activeRules = [];
 
 const activeProfilePath = path.join(targetDir, '.claude', 'active-profile.json');
 
@@ -55,22 +53,18 @@ if (fs.existsSync(activeProfilePath)) {
   try {
     const profile = JSON.parse(fs.readFileSync(activeProfilePath, 'utf8'));
     activeProfileName = profile.baseProfile || 'custom';
-    tokenEstimate = profile.tokenBudget ? profile.tokenBudget.installed : 0;
-    activeRules = profile.active ? (profile.active.rules || []) : [];
   } catch (e) {
     console.warn('  Warning: Could not parse active-profile.json, using defaults.');
   }
 }
 
-// If --profile flag is set, use that manifest for token info
+// If --profile flag is set, use that manifest
 if (profileName) {
   const manifestPath = path.join(MANIFESTS_DIR, `${profileName}.json`);
   if (fs.existsSync(manifestPath)) {
     try {
       const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
       activeProfileName = manifest.name || profileName;
-      tokenEstimate = manifest.tokenEstimate || 0;
-      activeRules = manifest.components ? (manifest.components.rules || []) : [];
     } catch (e) {
       console.warn(`  Warning: Could not parse ${profileName}.json manifest.`);
     }
@@ -79,17 +73,6 @@ if (profileName) {
 
 // Replace placeholders
 template = template.replace('{{ACTIVE_PROFILE_NAME}}', activeProfileName);
-template = template.replace('{{ACTIVE_PROFILE_TOKENS}}', tokenEstimate > 0 ? tokenEstimate.toLocaleString() : 'N/A');
-
-// Skill index include — points to the installed index file
-template = template.replace('{{SKILL_INDEX_INCLUDE}}', '@.claude/skills/index.md');
-
-// Rule index include — points to the installed index file
-template = template.replace('{{RULE_INDEX_INCLUDE}}', '@.claude/rules/index.md');
-
-// Rule includes — by default EMPTY (dynamic loading, no pre-loaded rules)
-// If active profile specifies rules to always load, add @includes for those
-template = template.replace('{{RULE_INCLUDES}}', '');
 
 // Write output
 const outputDir = path.join(targetDir, '.claude');
@@ -103,8 +86,7 @@ fs.writeFileSync(outputPath, template, 'utf8');
 
 console.log(`\n  CLAUDE.md generated successfully.`);
 console.log(`  Profile: ${activeProfileName}`);
-console.log(`  Output:  ${outputPath}`);
-console.log(`  Token savings: ~${tokenEstimate > 0 ? (tokenEstimate - 2300).toLocaleString() : 'N/A'} tokens vs pre-loading everything\n`);
+console.log(`  Output:  ${outputPath}\n`);
 
 module.exports = { generateClaudeMd: function(opts) {
   // Programmatic API for use by install-apply.js
@@ -115,19 +97,13 @@ module.exports = { generateClaudeMd: function(opts) {
   let tpl = fs.readFileSync(TEMPLATE_PATH, 'utf8');
 
   let pName = 'default';
-  let pTokens = 0;
 
   if (fs.existsSync(manifestPath)) {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     pName = manifest.name || tProfile;
-    pTokens = manifest.tokenEstimate || 0;
   }
 
   tpl = tpl.replace('{{ACTIVE_PROFILE_NAME}}', pName);
-  tpl = tpl.replace('{{ACTIVE_PROFILE_TOKENS}}', pTokens > 0 ? pTokens.toLocaleString() : 'N/A');
-  tpl = tpl.replace('{{SKILL_INDEX_INCLUDE}}', '@.claude/skills/index.md');
-  tpl = tpl.replace('{{RULE_INDEX_INCLUDE}}', '@.claude/rules/index.md');
-  tpl = tpl.replace('{{RULE_INCLUDES}}', '');
 
   const outDir = path.join(tDir, '.claude');
   if (!fs.existsSync(outDir)) {
@@ -135,5 +111,5 @@ module.exports = { generateClaudeMd: function(opts) {
   }
   fs.writeFileSync(path.join(outDir, 'CLAUDE.md'), tpl, 'utf8');
 
-  return { profileName: pName, tokenEstimate: pTokens };
+  return { profileName: pName };
 }};

@@ -1,5 +1,7 @@
 ---
 description: Create, review, refine, or explain Salesforce Flows
+argument-hint: "[--new | --review | --refine | --explain] [FlowName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /flow

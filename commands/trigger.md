@@ -1,5 +1,7 @@
 ---
 description: Create, review, refine, or debug Salesforce triggers and their handler classes
+argument-hint: "[--new | --review | --refine | --bug-fix] [ObjectName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /trigger
@@ -117,6 +119,27 @@ private void afterInsert(List<Account> newRecords) {
     }
 }
 ```
+
+### Recursion Prevention
+
+The handler template above uses a static Boolean guard (`isRunning`). This prevents re-entrant execution when DML inside the handler causes the same trigger to fire again.
+
+**Static Boolean Pattern** (built into the handler template):
+```apex
+private static Boolean isRunning = false;
+public void run() {
+    if (isRunning) return;
+    isRunning = true;
+    try { /* ... */ } finally { isRunning = false; }
+}
+```
+
+**When to use each approach:**
+- **Static Boolean** — sufficient for single-object triggers where your own DML causes re-entry
+- **Per-operation flag** — use `Set<String> processedIds` when partial re-processing of different records is valid
+- **TriggerHandler base class** — if the project already uses a framework (Finesse, Dan Appleman's), use its built-in `addToLoopCount()` / `checkLoopCount()` mechanism
+
+**Recursion flag pitfall:** The static Boolean resets per transaction, so it correctly prevents re-entry within a single DML chain but does not persist across unrelated transactions.
 
 ### Generate Output
 Create files:

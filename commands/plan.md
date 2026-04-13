@@ -1,5 +1,7 @@
 ---
 description: Create an implementation plan for a Salesforce feature
+argument-hint: "<feature description>"
+allowed-tools: [Read, Glob, Grep]
 ---
 
 # /plan

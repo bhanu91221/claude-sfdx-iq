@@ -1,5 +1,7 @@
 ---
 description: Security vulnerability scan for CRUD/FLS, sharing model, SOQL injection, XSS, and hardcoded secrets
+argument-hint: "[file, directory, or blank for changed files]"
+allowed-tools: [Read, Glob, Grep, Bash]
 ---
 
 # /security-scan

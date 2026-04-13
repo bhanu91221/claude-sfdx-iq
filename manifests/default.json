@@ -13,6 +13,7 @@
     ],
     "commands": [
       "apex-class",
+      "apex-test",
       "async-apex",
       "code-review",
       "csiq-help",
@@ -21,6 +22,7 @@
       "doctor",
       "explain",
       "flow",
+      "handoff",
       "integration-apex",
       "lwc",
       "org-health",
@@ -37,9 +39,7 @@
       "flow-post-edit",
       "lwc-post-edit",
       "soql-check",
-      "trigger-post-edit",
-      "governor-scan",
-      "security-scan"
+      "trigger-post-edit"
     ]
   }
 }

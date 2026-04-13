@@ -10,43 +10,44 @@ This is a Salesforce DX project using [org type: scratch/sandbox/production].
 
 ## claude-sfdx-iq Plugin
 
-This project uses the **claude-sfdx-iq** plugin v2.0.0 for Salesforce development.
-
-### Plugin Configuration
-- **Installed**: v2.0.0
-- **Hook Profile**: `standard` (balanced checks)
+This project uses the **claude-sfdx-iq** plugin for Salesforce development. Commands are self-contained — each command includes its domain standards inline. Invoke commands directly; no context loading step required.
 
 ### Available Commands
 
-Commands are self-contained — each includes its domain standards inline. No context loading step needed.
+**Domain Commands** (use flags for different workflows):
 
-**Domain commands (use flags to select workflow):**
-- `/apex-class --new|--review|--refine|--bug-fix` — Apex classes, service layers, utilities
-- `/trigger --new|--review|--refine|--bug-fix` — Triggers + handler delegation
-- `/async-apex --new|--refine|--bug-fix` — Batch, Queueable, Schedulable, @future
-- `/integration-apex --new|--refine|--bug-fix` — REST/SOAP callouts and inbound services
-- `/lwc --new|--explain|--refine|--bug-fix` — Lightning Web Components
-- `/flow --new|--review|--refine|--explain` — Screen/Record-Triggered/Scheduled Flows
+| Command | Flags | Purpose |
+|---------|-------|---------|
+| `/apex-class` | `--new`, `--review`, `--refine`, `--bug-fix` | Service, Selector, Controller, Domain, Utility classes |
+| `/trigger` | `--new`, `--review`, `--refine`, `--bug-fix` | Triggers + handler classes |
+| `/async-apex` | `--new`, `--refine`, `--bug-fix` | Batch, Queueable, Schedulable, @future, Platform Events |
+| `/integration-apex` | `--new`, `--refine`, `--bug-fix` | REST/SOAP callouts, inbound services |
+| `/lwc` | `--new`, `--explain`, `--refine`, `--bug-fix` | Lightning Web Components |
+| `/flow` | `--new`, `--review`, `--refine`, `--explain` | Salesforce Flows |
+| `/code-review` | `--apex`, `--lwc`, `--flow`, `--*-all` | Full code review via specialized agents |
+| `/explain` | `--apex`, `--lwc`, `--flow`, `--deep` | Explain artifacts; `--deep` for cross-file tracing |
+| `/security-scan` | — | CRUD/FLS, sharing, injection, XSS |
 
-**Cross-domain commands:**
-- `/code-review --apex|--lwc|--flow [file|--all]` — Full review with specialist agents in parallel
-- `/explain --apex|--lwc|--flow|--deep` — Explain code; `--deep` traces across files
-- `/security-scan` — CRUD/FLS, sharing, injection, CSP, guest user scan
+**Utility Commands**:
 
-**Utility commands:**
-- `/org-health` — Org health check and technical debt report
-- `/data-model` — ER design and object relationship analysis
-- `/plan` — Implementation planning with phased roadmap
-- `/package` — 2GP package versioning
-- `/debug-log` — Analyze Salesforce debug logs
-- `/doctor` — Diagnose environment issues
-- `/status` — Plugin and org connection status
+| Command | Purpose |
+|---------|---------|
+| `/apex-test` | Create or improve Apex test classes with coverage targeting |
+| `/debug-log` | Retrieve and analyze Salesforce debug logs |
+| `/setup-project` | Initialize plugin config for this project |
+| `/doctor` | Diagnose plugin/org configuration |
+| `/status` | Org + plugin status overview |
+| `/org-health` | Org health: security score, metadata debt |
+| `/data-model` | ER design, object relationships |
+| `/plan` | Implementation planning |
+| `/package` | 2GP package management |
+| `/handoff` | Generate session summary for context continuity |
 
 ## Development Workflow
 
 - Default org alias: [your-org-alias]
 - Test minimum: 90% coverage
-- Deployment: validate first, then quick deploy
+- Deployment: validate first, then quick deploy (done from VS Code or SF CLI directly)
 
 ## Architecture
 
@@ -65,6 +66,12 @@ Commands are self-contained — each includes its domain standards inline. No co
 - Commit format: `feat|fix|refactor|test: description`
 - 90%+ test coverage required for all Apex classes
 
+## LWC Standards
+
+- Avoid `@track` for primitives — all LWC properties are reactive since Winter '20
+- Use `@track` only for object/array properties needing deep reactivity (mutation of nested fields)
+- Always handle loading, error, and data states in templates
+
 ## External Integrations
 
 <!-- List named credentials and their purposes -->
@@ -81,10 +88,15 @@ Commands are self-contained — each includes its domain standards inline. No co
 Current hook profile: **standard** (balanced checks)
 
 Available profiles:
-- `minimal` — Critical checks only (fastest)
-- `standard` — Balanced checks (default)
-- `strict` — All checks including style warnings
+- `minimal` — SOQL/DML-in-loop detection only (fastest)
+- `standard` — + sharing keyword, hardcoded IDs, security checks (default)
+- `strict` — All checks including callouts in loops, enqueue in loops
 
 To change: Set `CSIQ_HOOK_PROFILE=minimal` in `.claude/settings.json`
 
-To disable specific hooks: Set `CSIQ_DISABLED_HOOKS="post-edit-pmd-scan,post-edit-debug-warn"`
+To disable specific checks: Set `CSIQ_DISABLED_HOOKS="no-soql-in-loop,no-hardcoded-secrets"` (comma-separated rule names)
+
+## Session Handoff
+
+For long development sessions, use `/handoff --save` to create a `HANDOFF.md` at end of session.
+Resume next session with: "Read HANDOFF.md and continue from where we left off."

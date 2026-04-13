@@ -1,5 +1,7 @@
 ---
 description: Show available claude-sfdx-iq commands and usage help
+argument-hint: ""
+allowed-tools: [Glob, Bash]
 ---
 
 # /csiq-help

@@ -118,8 +118,8 @@ The plugin installs globally once. Commands are self-contained -- each command i
 Global (installed once via marketplace)
 Location: ~/.claude/plugins/claude-sfdx-iq/
   Agents (7)      -- Domain specialists
-  Commands (19)   -- Slash commands with inline domain standards
-  Hooks (8)       -- Automated quality checks
+  Commands (21)   -- Slash commands with inline domain standards
+  Hooks (5)       -- Automated quality checks
              +
 Per Project (run setup-project once per repo)
 Location: /your-sfdx-project/.claude/

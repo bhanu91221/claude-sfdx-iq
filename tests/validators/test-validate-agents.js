@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AGENTS_DIR = path.resolve(__dirname, '..', '..', 'agents');
-const EXPECTED_AGENT_COUNT = 7;
+const EXPECTED_AGENT_COUNT = 7; // 7 agents (reference docs moved to docs/references/)
 const REQUIRED_FRONTMATTER_FIELDS = ['name', 'description', 'tools', 'model'];
 
 function parseFrontmatter(content) {

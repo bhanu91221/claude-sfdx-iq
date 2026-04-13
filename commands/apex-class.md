@@ -1,5 +1,7 @@
 ---
 description: Create, review, refine, or debug Apex classes (service, selector, controller, utility, domain)
+argument-hint: "[--new | --review | --refine | --bug-fix] [ClassName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /apex-class

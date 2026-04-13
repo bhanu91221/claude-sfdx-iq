@@ -1,6 +1,6 @@
 # Claude SFDX IQ — Agent Instructions
 
-This is a **Salesforce DX Claude Code plugin** providing 7 specialized agents, 19 self-contained commands, 8 hook definitions, 16 hook scripts, 5 CLI tools, and 5 mode contexts for Salesforce development.
+This is a **Salesforce DX Claude Code plugin** providing 7 specialized agents, 21 self-contained commands, 5 hook definitions, 16 hook scripts, and 5 CLI tools for Salesforce development.
 
 ## Core Principles
 
@@ -16,7 +16,7 @@ This is a **Salesforce DX Claude Code plugin** providing 7 specialized agents, 1
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
 | apex-code-reviewer | Apex quality: bulkification, SOQL selectivity, N+1, governor limits | After writing/modifying Apex code |
-| solution-designer | Solution architecture, phased implementation plans, integration design | Complex features, architectural decisions |
+| solution-designer | Solution architecture, phased implementation plans, integration design | Complex features, architectural decisions | *(Uses Opus — deeper reasoning for multi-constraint architecture trade-offs)* |
 | devops-coordinator | Deployment strategy, test patterns, org health, CI/CD pipelines | Deploy planning, org health checks |
 | lwc-reviewer | LWC component quality: wire, events, accessibility, performance | After writing/modifying LWC components |
 | security-auditor | CRUD/FLS, sharing model, SOQL injection, XSS, CSP, guest user | Security-sensitive code, before commits |
@@ -97,9 +97,8 @@ Test types (all required for Apex):
 
 ```
 agents/          — 7 specialized Salesforce subagents
-commands/        — 19 self-contained slash commands with inline domain standards
-hooks/           — Trigger-based automations with 16 hook scripts
-contexts/        — 5 mode-specific context files (develop, review, debug, deploy, admin)
+commands/        — 21 self-contained slash commands with inline domain standards
+hooks/           — 5 hook definitions with 16 hook scripts
 scripts/         — Cross-platform Node.js utilities, CLI tools, library scripts
 mcp-configs/     — MCP server configurations
 tests/           — Test suite

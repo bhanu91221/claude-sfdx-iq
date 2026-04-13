@@ -22,9 +22,7 @@
     ],
     "hooks": [
       "apex-post-edit",
-      "trigger-post-edit",
-      "governor-scan",
-      "security-scan"
+      "trigger-post-edit"
     ]
   }
 }

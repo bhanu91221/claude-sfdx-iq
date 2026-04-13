@@ -1,5 +1,7 @@
 ---
 description: Analyze or design Salesforce data model with relationship mapping
+argument-hint: "[--analyze | --design] [ObjectName or blank for full org]"
+allowed-tools: [Read, Glob, Grep, Bash]
 ---
 
 # /data-model
@@ -12,7 +14,7 @@ Analyze an existing Salesforce data model or design a new one. For existing mode
    - Ask the user: analyze existing data model or design a new one
    - If analyzing: identify scope — specific objects or entire org
    - If designing: gather business requirements
-   - Delegate to the **data-modeler** agent for domain-specific analysis
+   - Delegate to the **solution-designer** agent for domain-specific analysis
 
 2. **Mode: Analyze existing data model**
 

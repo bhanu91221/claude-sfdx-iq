@@ -1,5 +1,7 @@
 ---
 description: Create, refine, or debug async Apex (Batch, Queueable, Schedulable, Future methods)
+argument-hint: "[--new | --refine | --bug-fix] [ClassName or path]"
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # /async-apex
@@ -233,12 +235,105 @@ Create:
 
 ---
 
+## Platform Event-Triggered Async Apex
+
+Platform Events fire their own Apex triggers with a **separate governor limit budget** from standard Apex triggers. Use them for event-driven async processing.
+
+### When to Use Platform Events vs Queueable
+| Scenario | Use |
+|----------|-----|
+| React to Salesforce data changes in real time | Change Data Capture trigger |
+| Decouple systems (Salesforce ↔ external or SF ↔ SF) | Platform Event |
+| One-off async task from a trigger | Queueable |
+| Schedule large batch operations | Batch Apex |
+
+### Platform Event Trigger Pattern
+
+```apex
+// Trigger fires on platform event publication
+trigger OrderEventTrigger on Order_Event__e (after insert) {
+    OrderEventHandler handler = new OrderEventHandler();
+    handler.handleEvents(Trigger.new);
+}
+
+public class OrderEventHandler {
+    public void handleEvents(List<Order_Event__e> events) {
+        List<Task> toCreate = new List<Task>();
+
+        for (Order_Event__e event : events) {
+            if (event.Action__c == 'CREATED') {
+                toCreate.add(new Task(
+                    Subject = 'Process Order ' + event.Order_Id__c,
+                    WhatId = event.Account_Id__c,
+                    Status = 'Not Started'
+                ));
+            }
+        }
+
+        if (!toCreate.isEmpty()) {
+            // Use allOrNone=false for resilience — one failure shouldn't block others
+            Database.SaveResult[] results = Database.insert(toCreate, false);
+            for (Database.SaveResult sr : results) {
+                if (!sr.isSuccess()) {
+                    for (Database.Error err : sr.getErrors()) {
+                        System.debug(LoggingLevel.ERROR, 'Insert failed: ' + err.getMessage());
+                    }
+                }
+            }
+        }
+
+        // REQUIRED for high-volume events: checkpoint prevents reprocessing on failure
+        if (!events.isEmpty()) {
+            EventBus.TriggerContext.currentContext().setResumeCheckpoint(
+                events[events.size() - 1].ReplayId
+            );
+        }
+    }
+}
+```
+
+### Key Platform Event Rules
+- Platform event triggers run **after insert** only — no before context
+- Each PE trigger batch has its own 200 DML / 100 SOQL limit (not shared with other triggers)
+- Always call `setResumeCheckpoint()` on the last processed event — Salesforce uses this to avoid replaying already-processed events on failure
+- Use `Database.insert(list, false)` (allOrNone=false) so one bad record doesn't abort the batch
+- To publish from Apex: `EventBus.publish(List<My_Event__e>)` — returns `Database.SaveResult[]`
+
+### Publishing Platform Events
+
+```apex
+public class OrderService {
+    public static void notifyOrderCreated(List<Order__c> orders) {
+        List<Order_Event__e> events = new List<Order_Event__e>();
+        for (Order__c order : orders) {
+            events.add(new Order_Event__e(
+                Order_Id__c = order.Id,
+                Action__c = 'CREATED',
+                Account_Id__c = order.Account__c
+            ));
+        }
+        List<Database.SaveResult> results = EventBus.publish(events);
+        // Check results — publish can fail silently
+        for (Integer i = 0; i < results.size(); i++) {
+            if (!results[i].isSuccess()) {
+                System.debug(LoggingLevel.ERROR,
+                    'Failed to publish event for Order ' + orders[i].Id + ': ' +
+                    results[i].getErrors()[0].getMessage());
+            }
+        }
+    }
+}
+```
+
+---
+
 ## Examples
 
 ```
 /async-apex --new
 /async-apex --new Batch to sync Account records to external system via REST callout
 /async-apex --new Queueable that sends email notifications for closed opportunities
+/async-apex --new Platform Event trigger to process order events
 /async-apex --refine AccountSyncBatch reduce scope size and add error logging to finish()
 /async-apex --bug-fix AccountSyncBatch hitting SOQL limit in execute()
 ```

@@ -1,5 +1,7 @@
 ---
 description: Org health check across security, limits, coverage, and technical debt
+argument-hint: "[--target-org <alias>]"
+allowed-tools: [Read, Glob, Grep, Bash]
 ---
 
 # /org-health

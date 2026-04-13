@@ -5,7 +5,7 @@
  * list-installed.js — List all claude-sfdx-iq components available in the plugin
  *
  * Usage:
- *   node scripts/list-installed.js [--category agents|skills|commands|hooks|rules]
+ *   node scripts/list-installed.js [--category agents|commands|hooks]
  */
 
 const fs = require('fs');
@@ -39,16 +39,6 @@ function discoverComponents() {
       .sort();
   }
 
-  // Skills
-  const skillsDir = path.join(ROOT, 'skills');
-  if (fs.existsSync(skillsDir)) {
-    components.skills = fs.readdirSync(skillsDir, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .filter(d => fs.existsSync(path.join(skillsDir, d.name, 'SKILL.md')))
-      .map(d => d.name)
-      .sort();
-  }
-
   // Commands
   const commandsDir = path.join(ROOT, 'commands');
   if (fs.existsSync(commandsDir)) {
@@ -65,22 +55,6 @@ function discoverComponents() {
       .filter(f => f.endsWith('.json'))
       .map(f => f.replace('.json', ''))
       .sort();
-  }
-
-  // Rules
-  const rulesDir = path.join(ROOT, 'rules');
-  if (fs.existsSync(rulesDir)) {
-    components.rules = [];
-    const categories = fs.readdirSync(rulesDir, { withFileTypes: true })
-      .filter(d => d.isDirectory());
-    for (const cat of categories) {
-      const catDir = path.join(rulesDir, cat.name);
-      const files = fs.readdirSync(catDir)
-        .filter(f => f.endsWith('.md'))
-        .map(f => `${cat.name}/${f.replace('.md', '')}`);
-      components.rules.push(...files);
-    }
-    components.rules.sort();
   }
 
   return components;

@@ -6,11 +6,13 @@ const path = require('path');
 const { formatFindings } = require('../lib/report-formatter');
 
 // Claude Code passes hook input as JSON on stdin; fall back to argv for direct CLI use
+let fromStdinHook = false;
 function getFilePath() {
   if (process.argv[2]) return process.argv[2];
   try {
     const stdin = fs.readFileSync('/dev/stdin', 'utf8');
     const data = JSON.parse(stdin);
+    fromStdinHook = true;
     return (data.tool_input && (data.tool_input.file_path || data.tool_input.path)) || null;
   } catch (_) {
     return null;
@@ -20,11 +22,13 @@ function getFilePath() {
 const filePath = getFilePath();
 
 if (!filePath) {
+  if (fromStdinHook) process.exit(0);
   console.error('Usage: trigger-lint.js <file>');
   process.exit(1);
 }
-
+if (fromStdinHook && !/\.trigger$/i.test(filePath)) process.exit(0);
 if (!fs.existsSync(filePath)) {
+  if (fromStdinHook) process.exit(0);
   console.error(`File not found: ${filePath}`);
   process.exit(1);
 }

@@ -1,5 +1,7 @@
 ---
 description: Set up an SFDX project with claude-sfdx-iq rules and configuration (alternative to npx claude-sfdx-iq setup-project)
+argument-hint: ""
+allowed-tools: [Read, Write, Glob, Bash]
 ---
 
 # /setup-project
@@ -12,22 +14,14 @@ Copy claude-sfdx-iq rules and configuration templates into the current SFDX proj
 Check that `sfdx-project.json` exists in the current working directory. If missing, inform the user this must be run from an SFDX project root.
 
 ### Step 2: Locate the Plugin Directory
-Use Glob to search for the plugin's `rules/index.md` file in these locations:
-1. `~/.claude/plugins/claude-sfdx-iq/rules/index.md`
-2. `.claude/plugins/claude-sfdx-iq/rules/index.md`
-3. `**/claude-sfdx-iq/rules/index.md` (fallback broad search)
+Use Glob to search for the plugin's `CLAUDE.md` template in these locations:
+1. `~/.claude/plugins/claude-sfdx-iq/.claude-project-template/CLAUDE.md`
+2. `.claude/plugins/claude-sfdx-iq/.claude-project-template/CLAUDE.md`
+3. `**/claude-sfdx-iq/.claude-project-template/CLAUDE.md` (fallback broad search)
 
-The plugin root is the parent directory of the found `rules/` folder.
+The plugin root is the parent directory of the found `.claude-project-template/` folder.
 
-### Step 3: Copy Rules
-For each subdirectory in the plugin's `rules/` folder (common, apex, lwc, soql, flows, metadata):
-1. Read each `.md` file from the plugin's `rules/<subdomain>/` directory
-2. Write each file to `.claude/rules/<subdomain>/` in the current project
-3. Also copy `rules/index.md` to `.claude/rules/index.md`
-
-If `.claude/rules/` already exists, warn the user and ask before overwriting.
-
-### Step 4: Copy Settings Template
+### Step 3: Copy Settings Template
 If `.claude/settings.json` does NOT exist:
 - Read `.claude-project-template/settings.json` from the plugin directory
 - Write it to `.claude/settings.json`
@@ -41,20 +35,17 @@ If `CLAUDE.md` does NOT exist in the project root:
 
 If it already exists, skip and inform the user.
 
-### Step 6: Display Summary
+### Step 5: Display Summary
 
 ```
 Setup Complete
 ---
-Rules:     44 copied to .claude/rules/ (~43k tokens)
 Settings:  [copied / skipped]
 CLAUDE.md: [copied / skipped]
 
-Token Optimization:
-  context-assigner loads only 5-8 rules per task (saves ~30k tokens)
-
 Next steps:
-  /apex-review  — Review your Apex code
-  /tdd          — Start test-driven development
-  /deploy       — Deploy to your org
+  /apex-class --review  — Review your Apex code
+  /code-review          — Full code review across Apex, LWC, and Flows
+  /apex-test            — Create or improve Apex test classes
+  /status               — Check plugin and org status
 ```

@@ -1,5 +1,7 @@
 ---
 description: Explain what Salesforce code does — Apex classes, triggers, LWC components, Flows. Use --deep for cross-file behavioral tracing.
+argument-hint: "[--apex | --lwc | --flow | --deep] [file or component name]"
+allowed-tools: [Read, Glob, Grep]
 ---
 
 # /explain
